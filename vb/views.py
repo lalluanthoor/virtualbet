@@ -57,3 +57,6 @@ def betStandings(request):
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/standings/')
+    
+def placeBet(request):
+    pass

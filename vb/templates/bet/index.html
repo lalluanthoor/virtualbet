@@ -1,0 +1,23 @@
+{% extends 'bet/base.html' %}
+
+{% block content %}
+<legend>My Bets</legend>
+<table class="table">
+    <tr>
+        <th>Match</th>
+        <th>Date</th>
+        <th>Team</th>
+        <th style="text-ocaalign:right">Amount</th>
+    </tr>
+    {% if bets %}
+        {% for bet in bets %}
+            <tr>
+                <td> {{bet.match.home_team}} vs {{bet.match.away_team}} </td>
+                <td> {{bet.match.match_date}} </td>
+                <td> {{bet.team}} </td>
+                <td style="text-align:right"> {{bet.amount}} </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+</table>
+{% endblock %}

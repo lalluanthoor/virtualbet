@@ -1,0 +1,44 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Load the static files #}
+{% load staticfiles %}
+
+{# Load CSS and JavaScript #}
+<script src="{% static "jquery-1.12.3.min.js" %}"></script>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/vb/bet/"> vb </a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li class="{{active.home}}"><a href="/vb/bet/"> <span class="glyphicon glyphicon-home"></span> Home </a></li>
+				<li class="{{active.standings}}"><a href="/vb/bet/standings/"><span class="glyphicon glyphicon-list-alt"></span> View Standings </a></li>
+				<li class="{{active.bet}}"><a href="/vb/bet/placebet/"><span class="glyphicon glyphicon-usd"></span> Place Bet </a></li>
+				<li><a href="/vb/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="container" style="padding-top: 70px">{% block content %}{% endblock %}</div>
+<div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+	<div class="container">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/vb/"> vb </a>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="mailto:lallu.anthoor@sap.com"> <span class="glyphicon glyphicon-user"></span> Web Master
+				</a></li>
+			</ul>
+			</span>
+		</div>
+	</div>
+</div>

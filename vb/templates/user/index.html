@@ -1,0 +1,67 @@
+{# Load the tag library #}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{# Load CSS and JavaScript #}
+<script src="{% static "jquery-1.12.3.min.js" %}"></script>
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/vb/">
+                    vb
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="/vb/">
+                            <span class="glyphicon glyphicon-home"></span>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/vb/login">
+                            <span class="glyphicon glyphicon-log-in"></span>
+                            Login
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/vb/standings/"><span class="glyphicon glyphicon-list-alt"></span>
+                            View Standings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+
+{% bootstrap_icon "star" %}
+
+</div>
+        <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/vb/">
+                        vb
+                    </a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <a href="mailto:lallu.anthoor@sap.com">
+                                <span class="glyphicon glyphicon-user"></span>
+                                Web Master
+                            </a>
+                        </li>
+                    </ul>
+                    </span>
+                </div>
+            </div>
+        </div>

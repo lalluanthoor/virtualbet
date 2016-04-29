@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'^standings/$', views.standings, name='standings'),
     url(r'^bet/$', views.bet, name='bethome'),
     url(r'^logout/', views.logoutForm, name='logout'),
-    url(r'^bet/standings/', views.betStandings, name='betstandings')
+    url(r'^bet/standings/', views.betStandings, name='betstandings'),
+    url(r'^bet/placebet/', views.placeBet, name='placebet')
 ]

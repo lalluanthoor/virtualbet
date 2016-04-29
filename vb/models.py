@@ -17,9 +17,10 @@ class Fixture( models.Model ):
     away_team = models.ForeignKey( Team, on_delete=models.CASCADE, related_name='away_team' )
     match_date = models.DateField()
     match_time = models.TimeField()
+    match_number = models.IntegerField(default=1)
     
     def __str__(self):
-        return self.home_team.__str__() + ' vs ' + self.away_team.__str__() + ' on ' + self.match_date.__str__() + ' at ' + self.match_time.__str__()
+        return 'Match ' + str(self.match_number) + ' : ' + self.home_team.team_abbr + ' vs ' + self.away_team.team_abbr
     
 class Result( models.Model ):
     match = models.ForeignKey( Fixture, on_delete=models.CASCADE )
@@ -33,6 +34,12 @@ class BettingUser( User ):
     
     def __str__(self):
         return self.first_name + ' ' + self.last_name
+    
+    def placeBet(self, amount):
+        self.account_balance -= amount
+        
+    def addReward(self, amount):
+        self.account_balance += amount
 
 class Bet( models.Model ):
     match = models.ForeignKey( Fixture, on_delete=models.CASCADE )
@@ -41,4 +48,4 @@ class Bet( models.Model ):
     amount = models.IntegerField()
     
     def __str__(self):
-        return self.user.__str__() + ' bet ' + str(self.amount) + ' on match ' + self.match.__str__() 
+        return self.user.__str__() + ' bet ' + str(self.amount) + ' on ' + self.match.__str__() 

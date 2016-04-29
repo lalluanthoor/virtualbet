@@ -1,0 +1,11 @@
+{% extends 'bet/base.html' %}
+{% load bootstrap3 %}
+{% block content %}
+<div class="col-md-3"></div>
+<form action="/vb/bet/placebet/" method="post" role="form" class="col-md-6">
+    {% csrf_token %}
+    <legend>Bet for your favorite team <small>virtual money... real prizes...</small></legend>
+    {% bootstrap_form form %}
+    {% buttons submit='Place Bet' reset='Clear' %}{% endbuttons %}
+</form>
+{% endblock %}

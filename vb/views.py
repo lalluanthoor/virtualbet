@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 
 from .models import BettingUser, Bet
-from .forms import LoginForm
+from .forms import LoginForm, BetForm
 from django.http.response import HttpResponseRedirect
 
 # Create your views here.
@@ -59,4 +59,5 @@ def betStandings(request):
         return HttpResponseRedirect('/vb/standings/')
     
 def placeBet(request):
-    pass
+    form = BetForm()
+    return HttpResponse( render(request, 'bet/placebet.html', context={'form':form, 'active':{"placebet":"active"}}) )

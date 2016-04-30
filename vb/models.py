@@ -26,8 +26,11 @@ class Result( models.Model ):
     match = models.ForeignKey( Fixture, on_delete=models.CASCADE )
     winning_team = models.ForeignKey( Team, on_delete=models.CASCADE )
     
+    class Meta:
+        unique_together = ('match',)
+    
     def __str__(self):
-        return self.match.__str__() + ' won by ' + self.winning_team
+        return self.match.__str__() + ' won by ' + self.winning_team.__str__()
     
 class BettingUser( User ):
     account_balance = models.IntegerField()

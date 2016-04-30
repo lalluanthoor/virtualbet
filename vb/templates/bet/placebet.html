@@ -1,6 +1,7 @@
 {% extends 'bet/base.html' %}
 {% load bootstrap3 %}
 {% block content %}
+{% bootstrap_messages %}
 <div class="col-md-3"></div>
 <form action="/vb/bet/placebet/" method="post" role="form" class="col-md-6">
     {% csrf_token %}

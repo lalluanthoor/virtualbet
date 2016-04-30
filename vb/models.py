@@ -31,6 +31,7 @@ class Result( models.Model ):
     
 class BettingUser( User ):
     account_balance = models.IntegerField()
+    bet_admin = models.BooleanField(default=False)
     
     def __str__(self):
         return self.first_name + ' ' + self.last_name
@@ -43,9 +44,12 @@ class BettingUser( User ):
 
 class Bet( models.Model ):
     match = models.ForeignKey( Fixture, on_delete=models.CASCADE )
-    user = models.ForeignKey( BettingUser, on_delete=models.CASCADE )
+    user = models.ForeignKey( BettingUser, on_delete=models.CASCADE, null=True )
     team = models.ForeignKey(Team, on_delete=models.CASCADE, default='1')
-    amount = models.IntegerField()
+    amount = models.PositiveIntegerField()
+    
+    class Meta:
+        unique_together = ('match','user')
     
     def __str__(self):
-        return self.user.__str__() + ' bet ' + str(self.amount) + ' on ' + self.match.__str__() 
+        return self.user.__str__() + ' bet ' + str(self.amount) + ' on ' + self.match.__str__()

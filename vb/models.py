@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
-class Team( models.Model ):
+class Team(models.Model):
     team_name = models.CharField(max_length=200)
     team_abbr = models.CharField(max_length=3)
 
@@ -12,9 +12,11 @@ class Team( models.Model ):
         return self.team_name
 
 
-class Fixture( models.Model ):
-    home_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='home_team')
-    away_team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name='away_team')
+class Fixture(models.Model):
+    home_team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name='home_team')
+    away_team = models.ForeignKey(
+        Team, on_delete=models.CASCADE, related_name='away_team')
     match_date = models.DateField()
     match_time = models.TimeField()
     match_number = models.IntegerField(default=1)
@@ -23,7 +25,7 @@ class Fixture( models.Model ):
         return 'Match ' + str(self.match_number) + ' : ' + self.home_team.team_abbr + ' vs ' + self.away_team.team_abbr
 
 
-class Result( models.Model ):
+class Result(models.Model):
     match = models.ForeignKey(Fixture, on_delete=models.CASCADE)
     winning_team = models.ForeignKey(Team, on_delete=models.CASCADE)
 
@@ -34,7 +36,7 @@ class Result( models.Model ):
         return self.match.__str__() + ' won by ' + self.winning_team.__str__()
 
 
-class BettingUser( User ):
+class BettingUser(User):
     account_balance = models.IntegerField()
     bet_admin = models.BooleanField(default=False)
 
@@ -48,7 +50,7 @@ class BettingUser( User ):
         self.account_balance += amount
 
 
-class Bet( models.Model ):
+class Bet(models.Model):
     match = models.ForeignKey(Fixture, on_delete=models.CASCADE)
     user = models.ForeignKey(BettingUser, on_delete=models.CASCADE, null=True)
     team = models.ForeignKey(Team, on_delete=models.CASCADE, default='1')
@@ -61,7 +63,10 @@ class Bet( models.Model ):
         return self.user.__str__() + ' bet ' + str(self.amount) + ' on ' + self.match.__str__()
 
 
-class WinMultiplier( models.Model ):
-    match = models.ForeignKey( Fixture, on_delete=models.CASCADE )
-    team = models.ForeignKey( Team, on_delete=models.CASCADE )
+class WinMultiplier(models.Model):
+    match = models.ForeignKey(Fixture, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
     multiplier = models.PositiveIntegerField()
+
+    class Meta:
+        unique_together = ('match', 'team')

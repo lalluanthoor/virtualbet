@@ -1,20 +1,20 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http.response import HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from .models import BettingUser, Bet
-from .forms import LoginForm, BetForm, TransferForm
-from django.http.response import HttpResponseRedirect
-from vb.forms import ResultForm
+from .forms import ResultForm, LoginForm, BetForm, TransferForm
 from .core import manageBets
 
-# Create your views here.
+
 def index(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/vb/bet/')
     else:
         return HttpResponse(render(request,'user/index.html',context=None))
+
 
 def loginForm(request):
     if request.user.is_authenticated():
@@ -43,12 +43,14 @@ def loginForm(request):
             form = LoginForm()
             return HttpResponse( render(request, 'user/login.html', context={'form':form}))
 
+
 def standings(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('bet/standings.html')
     else:
         context = { 'users' : BettingUser.objects.order_by('-account_balance') }
         return HttpResponse( render(request, 'user/standings.html', context))
+
 
 def bet(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
@@ -57,9 +59,11 @@ def bet(request):
     else:
         return HttpResponseRedirect('/vb/login')
 
+
 def logoutForm(request):
     logout(request)
     return HttpResponseRedirect('/vb/login')
+
 
 def betStandings(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
@@ -67,6 +71,7 @@ def betStandings(request):
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/standings/')
+
 
 def placeBet(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
@@ -102,12 +107,14 @@ def placeBet(request):
     else:
         return HttpResponseRedirect('/vb/login/')
 
+
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
         bets = Bet.objects.order_by('-match')
         return HttpResponse(render(request, 'super/index.html', context={'active':{'home':'active'},'bets':bets}))
     else:
         return HttpResponseRedirect('/vb/')
+
 
 def addResult(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
@@ -132,12 +139,14 @@ def addResult(request):
     else:
         return HttpResponseRedirect('/vb/login')
 
+
 def adminStandings(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
         context = {'users':BettingUser.objects.order_by('-account_balance').filter(bet_admin=False),'active':{'standings':"active"}}
         return HttpResponse(render(request, 'super/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/login/')
+
 
 def transfer(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:

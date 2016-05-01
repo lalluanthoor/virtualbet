@@ -25,5 +25,3 @@ def manageBets(match, winTeam):
         winner.user.addReward(winAmount)
         winner.user.save()
         winner.save()
-        
-        print winner, winner.user.account_balance

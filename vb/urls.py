@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^bet/placebet/$', views.placeBet, name='placebet'),
     url(r'^bet/super/addresult/$', views.addResult, name='addresult'),
     url(r'^bet/super/$', views.admin, name='adminHome'),
-    url(r'^bet/super/standings/$', views.adminStandings, name='adminstandings')
+    url(r'^bet/super/standings/$', views.adminStandings, name='adminstandings'),
+    url(r'^bet/transfer/$', views.transfer, name='transfer')
 ]

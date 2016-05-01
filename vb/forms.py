@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Bet, Result, BettingUser
+from .models import Bet, Result,BettingUser, WinMultiplier
 
 class LoginForm(forms.Form):
     username = forms.CharField(label='Username', max_length=30)
@@ -22,3 +22,9 @@ class ResultForm(forms.ModelForm):
 class TransferForm(forms.Form):
     to_user = forms.ChoiceField(choices=[[x.pk, x.first_name+' '+x.last_name] for x in BettingUser.objects.filter(bet_admin=False)])
     amount = forms.IntegerField(min_value=1)
+
+
+class MultiplierForm( forms.ModelForm ):
+    class Meta:
+        model = WinMultiplier
+        fields = '__all__'

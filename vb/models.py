@@ -59,3 +59,9 @@ class Bet( models.Model ):
 
     def __str__(self):
         return self.user.__str__() + ' bet ' + str(self.amount) + ' on ' + self.match.__str__()
+
+
+class WinMultiplier( models.Model ):
+    match = models.ForeignKey( Fixture, on_delete=models.CASCADE )
+    team = models.ForeignKey( Team, on_delete=models.CASCADE )
+    multiplier = models.PositiveIntegerField()

@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from .models import BettingUser, Bet
-from .forms import ResultForm, LoginForm, BetForm, TransferForm
+from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
 from .core import manageBets
 
 
@@ -48,7 +48,7 @@ def standings(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('bet/standings.html')
     else:
-        context = { 'users' : BettingUser.objects.order_by('-account_balance') }
+        context = { 'users' : BettingUser.objects.order_by('-account_balance').filter(bet_admin=False) }
         return HttpResponse( render(request, 'user/standings.html', context))
 
 
@@ -76,31 +76,7 @@ def betStandings(request):
 def placeBet(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
-            form = BetForm(request.POST)
-            if form.is_valid():
-                try:
-                    bet = form.save(commit=False)
-                    bet.user = BettingUser.objects.get(username=request.user)
-                    if bet.user.account_balance < bet.amount:
-                        raise Exception("Not Enough Money")
-                    bet.user.placeBet(int(bet.amount))
-                    if bet.team != bet.match.home_team and bet.team != bet.match.away_team:
-                        raise Exception("Please Bet on Playing Team")
-                    bet.save()
-                    bet.user.save()
-                    messages.success(request, "Bet Placed")
-                    context = {'bets':Bet.objects.order_by('-match').filter(user=request.user), 'active':{'home':"active"}}
-                    return HttpResponse(render(request, 'bet/index.html', context=context))
-                except Exception as e:
-                    if e.message.startswith('UNIQUE'):
-                        msg = "Bet Already Placed"
-                    else:
-                        msg = e.message
-                    messages.error(request, msg)
-                    return HttpResponse(render(request, 'bet/placebet.html', context={'form':form, 'active':{'placebet':'active'}}))
-            else:
-                messages.error(request, "Validation Error")
-                return HttpResponse( render(request, 'bet/placebet.html', context={'form':form, 'active':{"placebet":"active"}}) )
+            return manageBets.placeBets(request)
         else:
             form = BetForm()
             return HttpResponse( render(request, 'bet/placebet.html', context={'form':form, 'active':{"placebet":"active"}}) )
@@ -119,20 +95,7 @@ def admin(request):
 def addResult(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
-            form = ResultForm(request.POST)
-            if form.is_valid():
-                try:
-                    form.save()
-                    manageBets.manageBets(request.POST[u'match'], request.POST[u'winning_team'])
-                    messages.success(request, "Result Saved")
-                    return HttpResponse(render(request, 'super/addresult.html', context={'active':{'addresult':'active'}, 'form':form}))
-                except Exception as e:
-                    print e
-                    messages.error(request, "Result Already Saved")
-                    return HttpResponse(render(request, 'super/addresult.html', context={'active':{'addresult':'active'}, 'form':form}))
-            else:
-                messages.error(request, "Validation Error")
-                return HttpResponse(render(request, 'super/addresult.html', context={'active':{'addresult':'active'}, 'form':form}))
+            manageBets.addResult(request)
         else:
             form = ResultForm()
             return HttpResponse(render(request, 'super/addresult.html', context={'active':{'addresult':'active'}, 'form':form}))
@@ -169,4 +132,17 @@ def transfer(request):
                     return HttpResponse(render(request, 'bet/transfer.html', context={'form':form, 'active':{'transfer':'active'}}))
         else:
             form = TransferForm()
-            return HttpResponse(render(request, 'bet/transfer.html', context={'form':form, 'active':{'transfer':'active'}}))
+            return HttpResponse(render(request,'bet/transfer.html',context={'form':form,'active':{'transfer':'active'}}))
+    else:
+        return HttpResponseRedirect('/vb/login/')
+
+def multiplier(request):
+    if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
+        if request.method == 'POST':
+            #process request
+            pass
+        else:
+            form = MultiplierForm()
+            return HttpResponse(render(request, 'super/multiplier.html', context={'form':form,'active':{'multiplier':'active'}}))
+    else:
+        return HttpResponseRedirect('/vb/login/')

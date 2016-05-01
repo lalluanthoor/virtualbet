@@ -50,19 +50,16 @@ def placeBets(request):
             bet.save()
             bet.user.save()
             messages.success(request, "Bet Placed")
-            context = {'bets': Bet.objects.order_by(
-                '-match').filter(user=request.user), 'active': {'home': "active"}}
-            return HttpResponse(render(request, 'bet/index.html', context=context))
+            form = BetForm()
         except Exception as e:
             if e.message.startswith('UNIQUE'):
                 msg = "Bet Already Placed"
             else:
                 msg = e.message
             messages.error(request, msg)
-            return HttpResponse(render(request, 'bet/placebet.html', context={'form': form, 'active': {'placebet': 'active'}}))
     else:
         messages.error(request, "Validation Error")
-        return HttpResponse(render(request, 'bet/placebet.html', context={'form': form, 'active': {"placebet": "active"}}))
+    return HttpResponse(render(request, 'bet/placebet.html', context={'form': form, 'active': {"placebet": "active"}}))
 
 
 def addResult(request):
@@ -72,11 +69,8 @@ def addResult(request):
             form.save()
             manageBets(request.POST[u'match'], request.POST[u'winning_team'])
             messages.success(request, "Result Saved")
-            return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form}))
-        except Exception as e:
-            print e
+        except:
             messages.error(request, "Result Already Saved")
-            return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form}))
     else:
         messages.error(request, "Validation Error")
-        return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form}))
+    return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form}))

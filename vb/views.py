@@ -18,7 +18,7 @@ def index(request):
 
 def loginForm(request):
     if request.user.is_authenticated():
-        if not BettingUser.objects.get(username = request.user.username).bet_admin:
+        if not BettingUser.objects.get(username=request.user.username).bet_admin:
             return HttpResponseRedirect('/vb/bet/')
         else:
             return HttpResponseRedirect('/vb/bet/super/')
@@ -53,7 +53,7 @@ def standings(request):
 
 
 def bet(request):
-    if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         context = {'bets':Bet.objects.order_by('-match').filter(user=request.user), 'active':{'home':"active"}}
         return HttpResponse( render(request, 'bet/index.html', context=context))
     else:
@@ -66,7 +66,7 @@ def logoutForm(request):
 
 
 def betStandings(request):
-    if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         context = {'users':BettingUser.objects.order_by('-account_balance'),'active':{'standings':"active"}}
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
@@ -74,13 +74,13 @@ def betStandings(request):
 
 
 def placeBet(request):
-    if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
             form = BetForm(request.POST)
             if form.is_valid():
                 try:
                     bet = form.save(commit=False)
-                    bet.user = BettingUser.objects.get(username = request.user)
+                    bet.user = BettingUser.objects.get(username=request.user)
                     if bet.user.account_balance < bet.amount:
                         raise Exception("Not Enough Money")
                     bet.user.placeBet(int(bet.amount))
@@ -109,7 +109,7 @@ def placeBet(request):
 
 
 def admin(request):
-    if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         bets = Bet.objects.order_by('-match')
         return HttpResponse(render(request, 'super/index.html', context={'active':{'home':'active'},'bets':bets}))
     else:
@@ -117,7 +117,7 @@ def admin(request):
 
 
 def addResult(request):
-    if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
             form = ResultForm(request.POST)
             if form.is_valid():
@@ -141,7 +141,7 @@ def addResult(request):
 
 
 def adminStandings(request):
-    if request.user.is_authenticated() and BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         context = {'users':BettingUser.objects.order_by('-account_balance').filter(bet_admin=False),'active':{'standings':"active"}}
         return HttpResponse(render(request, 'super/standings.html', context))
     else:
@@ -149,7 +149,7 @@ def adminStandings(request):
 
 
 def transfer(request):
-    if request.user.is_authenticated() and not BettingUser.objects.get(username = request.user.username).bet_admin:
+    if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
             form = TransferForm(request.POST)
             if form.is_valid():

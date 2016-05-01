@@ -13,7 +13,7 @@ def index(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/vb/bet/')
     else:
-        return HttpResponse(render(request,'user/index.html',context=None))
+        return HttpResponse(render(request, 'user/index.html', context=None))
 
 
 def loginForm(request):
@@ -67,7 +67,7 @@ def logoutForm(request):
 
 def betStandings(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
-        context = {'users':BettingUser.objects.order_by('-account_balance'),'active':{'standings':"active"}}
+        context = {'users':BettingUser.objects.order_by('-account_balance'), 'active':{'standings':"active"}}
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/standings/')
@@ -90,14 +90,14 @@ def placeBet(request):
                     bet.user.save()
                     messages.success(request, "Bet Placed")
                     context = {'bets':Bet.objects.order_by('-match').filter(user=request.user), 'active':{'home':"active"}}
-                    return HttpResponse(render(request,'bet/index.html',context=context))
+                    return HttpResponse(render(request, 'bet/index.html', context=context))
                 except Exception as e:
                     if e.message.startswith('UNIQUE'):
                         msg = "Bet Already Placed"
                     else:
                         msg = e.message
                     messages.error(request, msg)
-                    return HttpResponse(render(request,'bet/placebet.html', context={'form':form, 'active':{'placebet':'active'}}))
+                    return HttpResponse(render(request, 'bet/placebet.html', context={'form':form, 'active':{'placebet':'active'}}))
             else:
                 messages.error(request, "Validation Error")
                 return HttpResponse( render(request, 'bet/placebet.html', context={'form':form, 'active':{"placebet":"active"}}) )
@@ -111,7 +111,7 @@ def placeBet(request):
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         bets = Bet.objects.order_by('-match')
-        return HttpResponse(render(request, 'super/index.html', context={'active':{'home':'active'},'bets':bets}))
+        return HttpResponse(render(request, 'super/index.html', context={'active':{'home':'active'}, 'bets':bets}))
     else:
         return HttpResponseRedirect('/vb/')
 
@@ -142,7 +142,7 @@ def addResult(request):
 
 def adminStandings(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
-        context = {'users':BettingUser.objects.order_by('-account_balance').filter(bet_admin=False),'active':{'standings':"active"}}
+        context = {'users':BettingUser.objects.order_by('-account_balance').filter(bet_admin=False), 'active':{'standings':"active"}}
         return HttpResponse(render(request, 'super/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/login/')
@@ -158,7 +158,7 @@ def transfer(request):
                 transferAmount = request.POST['amount']
                 if fromUser.account_balance < transferAmount:
                     messages.error(request, "Not Enough Money")
-                    return HttpResponse(render(request,'bet/transfer.html',context={'form':form,'active':{'transfer':'active'}}))
+                    return HttpResponse(render(request, 'bet/transfer.html',context={'form':form, 'active':{'transfer':'active'}}))
                 else:
                     messages.success(request,"Amount Transferred")
                     fromUser.account_balance -= transferAmount
@@ -166,7 +166,7 @@ def transfer(request):
                     toUser.account_balance += transferAmount
                     toUser.save()
                     form = TransferForm()
-                    return HttpResponse(render(request,'bet/transfer.html',context={'form':form,'active':{'transfer':'active'}}))
+                    return HttpResponse(render(request, 'bet/transfer.html', context={'form':form, 'active':{'transfer':'active'}}))
         else:
             form = TransferForm()
-            return HttpResponse(render(request,'bet/transfer.html',context={'form':form,'active':{'transfer':'active'}}))
+            return HttpResponse(render(request, 'bet/transfer.html', context={'form':form, 'active':{'transfer':'active'}}))

@@ -17,5 +17,5 @@ class ResultForm(forms.ModelForm):
         fields = '__all__'
 
 class TransferForm(forms.Form):
-    to_user = forms.ChoiceField(choices=[[x.pk, x.username] for x in BettingUser.objects.filter(bet_admin=False)])
+    to_user = forms.ChoiceField(choices=[[x.pk, x.first_name+' '+x.last_name] for x in BettingUser.objects.filter(bet_admin=False)])
     amount = forms.IntegerField(min_value=1)

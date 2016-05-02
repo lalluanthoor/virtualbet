@@ -5,11 +5,14 @@
 
 {# Load the static files #}
 {% load staticfiles %}
-
+{% load static %}
 {# Load CSS and JavaScript #}
 <script src="{% static "jquery-1.12.3.min.js" %}"></script>
 {% bootstrap_css %}
 {% bootstrap_javascript %}
+{% with ''|add:theme|add:'.min.css' as theme_url %}
+<link rel="stylesheet" href="{% static theme_url %}" />
+{% endwith %}
 
 
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">

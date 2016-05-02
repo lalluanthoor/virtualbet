@@ -7,7 +7,7 @@ from datetime import datetime, time, timedelta, tzinfo
 from math import ceil
 
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -34,8 +34,8 @@ class FixedOffset(tzinfo):
         return ZERO
 
 
-def getTotalMoney(match):
-    return int(Bet.objects.filter(match=match).aggregate(total=Sum('amount'))['total'] if Bet.objects.filter(match=match).aggregate(total=Sum('amount'))['total'] else '0')
+def getTotalLosersBet(match, winTeam):
+    return int(Bet.objects.filter(~Q(team=winTeam), match=match).aggregate(total=Sum('amount'))['total'] if Bet.objects.filter(match=match).aggregate(total=Sum('amount'))['total'] else '0')
 
 
 def getTotalWinnersBet(match, winTeam):
@@ -43,14 +43,15 @@ def getTotalWinnersBet(match, winTeam):
 
 
 def manageBets(match, winTeam):
-    total = getTotalMoney(match)
+    totalLosersBet = getTotalLosersBet(match, winTeam)
     totalWinBet = getTotalWinnersBet(match, winTeam)
     winners = Bet.objects.filter(match=match, team=winTeam)
     multiply = WinMultiplier.objects.filter(match=match, team=winTeam)
     multiplier = 1 if multiply is None else multiply.multiplier
 
     for winner in winners:
-        winAmount = ceil((winner.amount * total * multiplier) / totalWinBet)
+        winAmount = winner.amount + \
+            ceil((winner.amount * totalLosersBet * multiplier) / totalWinBet)
         winner.user.addReward(winAmount)
         winner.user.save()
         winner.save()

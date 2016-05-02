@@ -3,6 +3,7 @@ Created on 30-Apr-2016
 
 @author: lalluanthoor
 '''
+from datetime import datetime, time, timedelta, tzinfo
 from math import ceil
 
 from django.contrib import messages
@@ -11,7 +12,26 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from ..forms import BetForm, ResultForm
-from ..models import Bet, BettingUser, WinMultiplier
+from ..models import Bet, BettingUser, Configuration, Fixture, WinMultiplier
+
+ZERO = timedelta(0)
+
+
+class FixedOffset(tzinfo):
+    """Fixed offset in minutes east from UTC."""
+
+    def __init__(self, offset, name):
+        self.__offset = timedelta(minutes=offset)
+        self.__name = name
+
+    def utcoffset(self, dt):
+        return self.__offset
+
+    def tzname(self, dt):
+        return self.__name
+
+    def dst(self, dt):
+        return ZERO
 
 
 def getTotalMoney(match):
@@ -40,6 +60,18 @@ def placeBets(request):
     form = BetForm(request.POST)
     if form.is_valid():
         try:
+            _now = datetime.strftime(
+                datetime.now(FixedOffset(330, 'IST')), '%Y-%m-%d %H:%M:%S')
+            _match = str(Fixture.objects.get(
+                pk=request.POST['match']).match_date) + ' ' + str(Fixture.objects.get(
+                    pk=request.POST['match']).match_time)
+            _t1 = datetime.strptime(_now, '%Y-%m-%d %H:%M:%S')
+            _t2 = datetime.strptime(_match, '%Y-%m-%d %H:%M:%S')
+            _delta = _t1 - _t2
+            _allowed = timedelta(
+                minutes=Configuration.objects.get(pk=1).getTime())
+            if _delta > _allowed:
+                raise Exception("Cannot Bet Now, Time Expired")
             bet = form.save(commit=False)
             bet.user = BettingUser.objects.get(username=request.user)
             if bet.user.account_balance < bet.amount:

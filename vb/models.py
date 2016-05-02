@@ -74,3 +74,7 @@ class WinMultiplier(models.Model):
 
 class Configuration(models.Model):
     allow_transfer = models.BooleanField(default=True)
+    freeze_bet_before = models.PositiveIntegerField(default=30)
+
+    def getTime(self):
+        return self.freeze_bet_before

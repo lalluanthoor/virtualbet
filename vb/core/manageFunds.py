@@ -10,8 +10,6 @@ from django.shortcuts import render
 from ..forms import ConfigForm, MultiplierForm, TransferForm
 from ..models import BettingUser, Configuration
 
-theme = Configuration.objects.get(pk=1).theme.theme_name
-
 
 def transferFunds(request):
     form = TransferForm(request.POST)
@@ -31,6 +29,7 @@ def transferFunds(request):
             form = TransferForm()
     else:
         messages.error(request, "Validation Error")
+    theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'theme': theme}))
 
 
@@ -44,6 +43,7 @@ def addMultiplier(request):
             messages.error(request, "Multiplier Already Saved")
     else:
         messages.error(request, "Validation Error")
+    theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'super/multiplier.html', context={'active': {'multiplier': 'active'}, 'form': form, 'theme': theme}))
 
 
@@ -55,10 +55,10 @@ def configUpdate(request):
     form = ConfigForm(request.POST, instance=conf)
     if form.is_valid():
         form.save()
-        theme = Configuration.objects.get(pk=1).theme.theme_name
         messages.success(request, "Configuration Saved")
     else:
         messages.error(request, "Validation Error")
+    theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration | VirtualBet', 'active': {'config': 'active'}, 'theme': theme}))
 
 

@@ -14,8 +14,6 @@ from django.shortcuts import render
 from ..forms import BetForm, ResultForm
 from ..models import Bet, BettingUser, Configuration, Fixture, WinMultiplier
 
-theme = Configuration.objects.get(pk=1).theme.theme_name
-
 ZERO = timedelta(0)
 
 
@@ -94,6 +92,7 @@ def placeBets(request):
             messages.error(request, msg)
     else:
         messages.error(request, "Validation Error")
+    theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'bet/placebet.html', context={'form': form, 'active': {"placebet": "active"}, 'theme': theme}))
 
 
@@ -108,4 +107,5 @@ def addResult(request):
             messages.error(request, "Result Already Saved")
     else:
         messages.error(request, "Validation Error")
+    theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form, 'theme': theme}))

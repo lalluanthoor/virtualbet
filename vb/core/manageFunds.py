@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from ..forms import ConfigForm, MultiplierForm, TransferForm
-from ..models import BettingUser
+from ..models import BettingUser, Configuration
 
 
 def transferFunds(request):
@@ -46,8 +46,13 @@ def addMultiplier(request):
 
 
 def configUpdate(request):
-    form = ConfigForm(request.POST)
+    try:
+        conf = Configuration.objects.get(pk=1)
+    except:
+        conf = Configuration()
+    form = ConfigForm(request.POST, instance=conf)
     if form.is_valid():
+        form.save()
         messages.success(request, "Configuration Saved")
     else:
         messages.error(request, "Validation Error")

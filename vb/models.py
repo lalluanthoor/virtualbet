@@ -72,9 +72,17 @@ class WinMultiplier(models.Model):
         unique_together = ('match', 'team')
 
 
+class Theme(models.Model):
+    theme_name = models.CharField(max_length=25)
+
+    def __str__(self):
+        return self.theme_name.title()
+
+
 class Configuration(models.Model):
     allow_transfer = models.BooleanField(default=True)
     freeze_bet_before = models.PositiveIntegerField(default=30)
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, default=1)
 
     def getTime(self):
         return self.freeze_bet_before

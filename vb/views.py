@@ -8,14 +8,18 @@ from vb.forms import ConfigForm
 
 from .core import manageBets, manageFunds
 from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
-from .models import BettingUser, Bet
+from .models import BettingUser, Bet, Configuration
+
+
+theme = Configuration.objects.get(pk=1).theme.theme_name
+print theme
 
 
 def index(request):
     if request.user.is_authenticated():
         return HttpResponseRedirect('/vb/bet/')
     else:
-        return HttpResponse(render(request, 'user/index.html', context={'title': 'Home | VirtualBet'}))
+        return HttpResponse(render(request, 'user/index.html', context={'title': 'Home | VirtualBet', 'theme': theme}))
 
 
 def loginForm(request):
@@ -44,7 +48,7 @@ def loginForm(request):
                     return HttpResponseRedirect('/vb/login/')
         else:
             form = LoginForm()
-            return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login | VirtualBet'}))
+            return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login | VirtualBet', 'theme': theme}))
 
 
 def standings(request):
@@ -52,14 +56,14 @@ def standings(request):
         return HttpResponseRedirect('bet/standings.html')
     else:
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance').filter(bet_admin=False), 'title': 'Standings | VirtualBet'}
+            '-account_balance').filter(bet_admin=False), 'title': 'Standings | VirtualBet', 'theme': theme}
         return HttpResponse(render(request, 'user/standings.html', context))
 
 
 def bet(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         context = {'bets': Bet.objects.order_by(
-            '-match').filter(user=request.user), 'active': {'home': "active"}, 'title': 'Bet Home | VirtualBet'}
+            '-match').filter(user=request.user), 'active': {'home': "active"}, 'title': 'Bet Home | VirtualBet', 'theme': theme}
         return HttpResponse(render(request, 'bet/index.html', context=context))
     else:
         return HttpResponseRedirect('/vb/login')
@@ -73,7 +77,7 @@ def logoutForm(request):
 def betStandings(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings | VirtualBet'}
+            '-account_balance').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings | VirtualBet', 'theme': theme}
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/standings/')
@@ -85,7 +89,7 @@ def placeBet(request):
             return manageBets.placeBets(request)
         else:
             form = BetForm()
-            return HttpResponse(render(request, 'bet/placebet.html', context={'form': form, 'active': {"placebet": "active"}, 'title': 'Bet | VirtualBet'}))
+            return HttpResponse(render(request, 'bet/placebet.html', context={'form': form, 'active': {"placebet": "active"}, 'title': 'Bet | VirtualBet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/login/')
 
@@ -93,7 +97,7 @@ def placeBet(request):
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         bets = Bet.objects.order_by('-match')
-        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': bets, 'title': 'Admin Home | Virtual Bet'}))
+        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': bets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/')
 
@@ -104,7 +108,7 @@ def addResult(request):
             manageBets.addResult(request)
         else:
             form = ResultForm()
-            return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form, 'title': 'Add Result | VirtualBet'}))
+            return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form, 'title': 'Add Result | VirtualBet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/login')
 
@@ -112,7 +116,7 @@ def addResult(request):
 def adminStandings(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings | VirtualBet'}
+            '-account_balance').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings | VirtualBet', 'theme': theme}
         return HttpResponse(render(request, 'super/standings.html', context))
     else:
         return HttpResponseRedirect('/vb/login/')
@@ -124,7 +128,7 @@ def transfer(request):
             return manageFunds.transferFunds(request)
         else:
             form = TransferForm()
-            return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'title': 'Transfers | VirtualBet'}))
+            return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'title': 'Transfers | VirtualBet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/login/')
 
@@ -135,7 +139,7 @@ def multiplier(request):
             return manageFunds.addMultiplier(request)
         else:
             form = MultiplierForm()
-            return HttpResponse(render(request, 'super/multiplier.html', context={'form': form, 'active': {'multiplier': 'active'}, 'title': 'Win Multiplier | VirtualBet'}))
+            return HttpResponse(render(request, 'super/multiplier.html', context={'form': form, 'active': {'multiplier': 'active'}, 'title': 'Win Multiplier | VirtualBet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/login/')
 
@@ -143,7 +147,9 @@ def multiplier(request):
 def config(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
+            print theme
             return manageFunds.configUpdate(request)
         else:
-            form = ConfigForm()
-            return HttpResponse(render(request, 'super/config.html', context={'form': form, 'active': {'config': 'active'}, 'title': 'Configuration | VirtualBet'}))
+            form = ConfigForm(instance=Configuration.objects.get(pk=1))
+            print theme
+            return HttpResponse(render(request, 'super/config.html', context={'form': form, 'active': {'config': 'active'}, 'title': 'Configuration | VirtualBet', 'theme': theme}))

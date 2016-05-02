@@ -40,3 +40,7 @@ class ConfigForm(forms.ModelForm):
     class Meta:
         model = Configuration
         fields = '__all__'
+
+
+class AddMoneyForm(forms.Form):
+    amount = forms.IntegerField(min_value=1)

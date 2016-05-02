@@ -1,3 +1,5 @@
+import os
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse
@@ -12,6 +14,7 @@ from .models import BettingUser, Bet, Configuration
 
 
 def index(request):
+    print os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if request.user.is_authenticated():
         return HttpResponseRedirect('/vb/bet/')
     else:

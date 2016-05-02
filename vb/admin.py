@@ -1,9 +1,13 @@
 from django.contrib import admin
-from .models import Bet, BettingUser, Fixture, Result, Team
-# Register your models here.
 
+from vb.models import Bet, BettingUser, Configuration, Fixture, Result, Team, WinMultiplier
+
+
+# Register your models here.
 admin.site.register(Bet)
 admin.site.register(BettingUser)
+admin.site.register(Configuration)
 admin.site.register(Fixture)
 admin.site.register(Result)
 admin.site.register(Team)
+admin.site.register(WinMultiplier)

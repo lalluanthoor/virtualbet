@@ -70,3 +70,7 @@ class WinMultiplier(models.Model):
 
     class Meta:
         unique_together = ('match', 'team')
+
+
+class Configuration(models.Model):
+    allow_transfer = models.BooleanField(default=True)

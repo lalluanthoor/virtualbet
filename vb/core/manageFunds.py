@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from ..forms import MultiplierForm, TransferForm
+from ..forms import ConfigForm, MultiplierForm, TransferForm
 from ..models import BettingUser
 
 
@@ -43,3 +43,12 @@ def addMultiplier(request):
     else:
         messages.error(request, "Validation Error")
     return HttpResponse(render(request, 'super/multiplier.html', context={'active': {'multiplier': 'active'}, 'form': form}))
+
+
+def configUpdate(request):
+    form = ConfigForm(request.POST)
+    if form.is_valid():
+        messages.success(request, "Configuration Saved")
+    else:
+        messages.error(request, "Validation Error")
+    return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration | VirtualBet', 'active': {'config': 'active'}}))

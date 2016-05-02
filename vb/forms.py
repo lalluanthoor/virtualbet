@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Bet, Result, BettingUser, WinMultiplier
+from .models import Bet, Result, Configuration, BettingUser, WinMultiplier
 
 
 class LoginForm(forms.Form):
@@ -32,4 +32,11 @@ class MultiplierForm(forms.ModelForm):
 
     class Meta:
         model = WinMultiplier
+        fields = '__all__'
+
+
+class ConfigForm(forms.ModelForm):
+
+    class Meta:
+        model = Configuration
         fields = '__all__'

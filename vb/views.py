@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
+from vb.forms import ConfigForm
+
 from .core import manageBets, manageFunds
 from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
 from .models import BettingUser, Bet
@@ -136,3 +138,12 @@ def multiplier(request):
             return HttpResponse(render(request, 'super/multiplier.html', context={'form': form, 'active': {'multiplier': 'active'}, 'title': 'Win Multiplier | VirtualBet'}))
     else:
         return HttpResponseRedirect('/vb/login/')
+
+
+def config(request):
+    if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
+        if request.method == 'POST':
+            return manageFunds.configUpdate(request)
+        else:
+            form = ConfigForm()
+            return HttpResponse(render(request, 'super/config.html', context={'form': form, 'active': {'config': 'active'}, 'title': 'Configuration | VirtualBet'}))

@@ -159,3 +159,5 @@ def config(request):
             form = ConfigForm(instance=Configuration.objects.get(pk=1))
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'super/config.html', context={'form': form, 'active': {'config': 'active'}, 'title': 'Configuration | VirtualBet', 'theme': theme}))
+    else:
+        return HttpResponseRedirect('/vb/login/')

@@ -44,3 +44,11 @@ class ConfigForm(forms.ModelForm):
 
 class AddMoneyForm(forms.Form):
     amount = forms.IntegerField(min_value=1)
+
+
+class RegistrationForm(forms.ModelForm):
+
+    class Meta:
+        model = BettingUser
+        fields = ['username', 'first_name',
+                  'last_name', 'email', 'password']

@@ -47,20 +47,5 @@ def addMultiplier(request):
     return HttpResponse(render(request, 'super/multiplier.html', context={'active': {'multiplier': 'active'}, 'form': form, 'theme': theme}))
 
 
-def configUpdate(request):
-    try:
-        conf = Configuration.objects.get(pk=1)
-    except:
-        conf = Configuration()
-    form = ConfigForm(request.POST, instance=conf)
-    if form.is_valid():
-        form.save()
-        messages.success(request, "Configuration Saved")
-    else:
-        messages.error(request, "Validation Error")
-    theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration | VirtualBet', 'active': {'config': 'active'}, 'theme': theme}))
-
-
 def addMoney(request):
     pass

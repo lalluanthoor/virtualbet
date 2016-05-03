@@ -6,9 +6,9 @@ from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
-from vb.forms import ConfigForm
+from vb.forms import ConfigForm, RegistrationForm
 
-from .core import manageBets, manageFunds
+from .core import manageBets, manageCentral, manageFunds
 from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
 from .models import BettingUser, Bet, Configuration
 
@@ -43,13 +43,15 @@ def loginForm(request):
                         else:
                             return HttpResponseRedirect('/vb/bet/')
                     else:
-                        return HttpResponseRedirect('/vb/login/')
+                        messages.error(request, 'Invalid username/password')
                 else:
-                    return HttpResponseRedirect('/vb/login/')
+                    messages.error(request, 'Invalid username/password')
+            else:
+                messages.error(request, 'Validation Error')
         else:
             form = LoginForm()
-            theme = Configuration.objects.get(pk=1).theme.theme_name
-            return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login | VirtualBet', 'theme': theme}))
+        theme = Configuration.objects.get(pk=1).theme.theme_name
+        return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login | VirtualBet', 'theme': theme}))
 
 
 def standings(request):
@@ -157,10 +159,19 @@ def multiplier(request):
 def config(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
-            return manageFunds.configUpdate(request)
+            return manageCentral.configUpdate(request)
         else:
             form = ConfigForm(instance=Configuration.objects.get(pk=1))
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'super/config.html', context={'form': form, 'active': {'config': 'active'}, 'title': 'Configuration | VirtualBet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/login/')
+
+
+def register(request):
+    if request.method == 'POST':
+        return manageCentral.registerUser(request)
+    else:
+        form = RegistrationForm()
+        theme = Configuration.objects.get(pk=1).theme.theme_name
+        return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register | VirtualBet'}))

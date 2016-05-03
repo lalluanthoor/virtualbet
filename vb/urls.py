@@ -15,5 +15,6 @@ urlpatterns = [
         views.adminStandings, name='adminstandings'),
     url(r'^bet/transfer/$', views.transfer, name='transfer'),
     url(r'^bet/super/multiplier/$', views.multiplier, name='multiplier'),
-    url(r'^bet/super/config/$', views.config, name='config')
+    url(r'^bet/super/config/$', views.config, name='config'),
+    url(r'^register/$', views.register, name='register')
 ]

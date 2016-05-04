@@ -19,7 +19,7 @@ def transferFunds(request):
         fromUser = BettingUser.objects.get(
             username=request.user.username)
         toUser = BettingUser.objects.get(pk=request.POST['to_user'])
-        transferAmount = request.POST['amount']
+        transferAmount = int(request.POST['amount'])
         if fromUser.account_balance < transferAmount:
             messages.error(request, "Not Enough Money")
         else:

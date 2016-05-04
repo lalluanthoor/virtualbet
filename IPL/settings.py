@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    #    'vb.apps.VbConfig',
+    'vb.apps.VbConfig',
 ]
 
 MIDDLEWARE_CLASSES = [

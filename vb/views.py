@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
-from vb.forms import ConfigForm, RegistrationForm
+from vb.forms import ConfigForm, RegistrationForm, AddMoneyForm
 
 from .core import manageBets, manageCentral, manageFunds
 from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
@@ -166,6 +166,18 @@ def config(request):
             return HttpResponse(render(request, 'super/config.html', context={'form': form, 'active': {'config': 'active'}, 'title': 'Configuration | VirtualBet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/vb/login/')
+
+
+def addmoney(request):
+    if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
+        if request.method == 'POST':
+            return manageFunds.addMoney(request)
+        else:
+            form = AddMoneyForm()
+            theme = Configuration.objects.get(pk=1).theme.theme_name
+            return HttpResponse(render(request, 'super/addmoney.html', context={'form': form, 'active': {'addmoney': 'active'}, 'title': 'Add Money | VirtualBet', 'theme': theme}))
+    else:
+        HttpResponseRedirect('/vb/login/')
 
 
 def register(request):

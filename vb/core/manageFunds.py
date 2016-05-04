@@ -7,6 +7,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from vb.forms import AddMoneyForm
+
 from ..forms import ConfigForm, MultiplierForm, TransferForm
 from ..models import BettingUser, Configuration
 
@@ -48,4 +50,14 @@ def addMultiplier(request):
 
 
 def addMoney(request):
-    pass
+    form = AddMoneyForm(request.POST)
+    if form.is_valid():
+        users = BettingUser.objects.filter(bet_admin=False)
+        for user in users:
+            user.account_balance += request.POST.amount
+            user.save()
+            messages.success(request, 'Money Sent to All')
+    else:
+        messages.error(request, 'Validation Error')
+    theme = Configuration.objects.get(pk=1).theme.theme_name
+    return HttpResponse(render(request, 'super/addmoney.html', context={'form': form, 'active': {'addmoney': 'active'}, 'title': 'Add Money | VirtualBet', 'theme': theme}))

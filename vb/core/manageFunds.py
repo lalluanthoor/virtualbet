@@ -54,7 +54,7 @@ def addMoney(request):
     if form.is_valid():
         users = BettingUser.objects.filter(bet_admin=False)
         for user in users:
-            user.account_balance += request.POST['amount']
+            user.account_balance += int(request.POST['amount'])
             user.save()
             messages.success(request, 'Money Sent to All')
     else:

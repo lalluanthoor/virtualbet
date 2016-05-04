@@ -1,0 +1,22 @@
+{% extends 'super/base.html' %}
+
+{% block content %}
+
+<table class="table">
+	<tr>
+		<th>Match</th>
+		<th>Better</th>
+		<th>Team</th>
+		<th style="text-align:right">Amount</th>
+	</tr>
+	{% for bet in bets %}
+		<tr>
+			<td> {{bet.match}} </td>
+			<td> {{bet.user.first_name}} {{bet.user.last_name}} </td>
+			<td> {{bet.team}} </td>
+			<td style="text-align:right"> {{bet.amount}} </td>
+		</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}

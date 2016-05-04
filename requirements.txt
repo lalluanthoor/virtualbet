@@ -15,3 +15,4 @@ virtualenv==15.0.1
 xattr==0.6.4
 zope.interface==4.1.1
 gunicorn
+dj-database-url

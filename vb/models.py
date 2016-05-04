@@ -23,7 +23,7 @@ class Fixture(models.Model):
 
     def __str__(self):
         return 'Match ' + str(self.match_number) + ' : ' + self.home_team.team_abbr + ' vs ' + self.away_team.team_abbr
-'''
+
 
 class Result(models.Model):
     match = models.ForeignKey(Fixture, on_delete=models.CASCADE)
@@ -36,7 +36,7 @@ class Result(models.Model):
         return self.match.__str__() + ' won by ' + self.winning_team.__str__()
 
 
-class BettingUser(User):
+class BettingUser(models.Model):
     account_balance = models.IntegerField()
     bet_admin = models.BooleanField(default=False)
 
@@ -86,4 +86,3 @@ class Configuration(models.Model):
 
     def getTime(self):
         return self.freeze_bet_before
-'''

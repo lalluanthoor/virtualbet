@@ -7,10 +7,8 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from vb.forms import AddMoneyForm
-
-from ..forms import ConfigForm, MultiplierForm, TransferForm
-from ..models import BettingUser, Configuration
+from vb.forms import AddMoneyForm, MultiplierForm, TransferForm
+from vb.models import BettingUser, Configuration
 
 
 def transferFunds(request):
@@ -56,8 +54,22 @@ def addMoney(request):
         for user in users:
             user.account_balance += int(request.POST['amount'])
             user.save()
-            messages.success(request, 'Money Sent to All')
+        messages.success(request, 'Money Sent to All')
     else:
         messages.error(request, 'Validation Error')
     theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'super/addmoney.html', context={'form': form, 'active': {'addmoney': 'active'}, 'title': 'Add Money | VirtualBet', 'theme': theme}))
+
+
+def addLuckyDraw(request):
+    form = TransferForm(request.POST)
+    if form.is_valid():
+        user = BettingUser.objects.get(pk=request.POST['to_user'])
+        amount = int(request.POST['amount'])
+        user.account_balance += amount
+        user.save()
+        messages.success(request, 'Lucky Draw Amount Sent')
+    else:
+        messages.error(request, 'Validation Error')
+    theme = Configuration.objects.get(pk=1).theme.theme_name
+    return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw | VirtualBet'}))

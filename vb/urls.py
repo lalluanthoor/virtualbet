@@ -18,4 +18,5 @@ urlpatterns = [
     url(r'^bet/super/config/$', views.config, name='config'),
     url(r'^register/$', views.register, name='register'),
     url(r'^bet/super/addmoney/$', views.addmoney, name='addmoney'),
+    url(r'^bet/super/luckydraw/$', views.luckydraw, name='luckydraw'),
 ]

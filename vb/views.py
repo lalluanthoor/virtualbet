@@ -86,7 +86,7 @@ def betStandings(request):
             '-account_balance').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings | VirtualBet', 'theme': theme}
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
-        return HttpResponseRedirect('/vb/standings/')
+        return HttpResponseRedirect('/vb/login/')
 
 
 def placeBet(request):
@@ -107,7 +107,7 @@ def admin(request):
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': bets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:
-        return HttpResponseRedirect('/vb/')
+        return HttpResponseRedirect('/vb/login')
 
 
 def addResult(request):
@@ -187,3 +187,15 @@ def register(request):
         form = RegistrationForm()
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register | VirtualBet'}))
+
+
+def luckydraw(request):
+    if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
+        if request.method == 'POST':
+            return manageFunds.addLuckyDraw(request)
+        else:
+            form = TransferForm()
+            theme = Configuration.objects.get(pk=1).theme.theme_name
+            return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw | VirtualBet'}))
+    else:
+        HttpResponseRedirect('/vb/login')

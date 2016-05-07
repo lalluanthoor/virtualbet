@@ -9,7 +9,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 from vb.forms import ConfigForm, RegistrationForm
-from vb.models import BettingUser, Configuration
+from vb.models import Configuration
 
 
 def configUpdate(request):
@@ -37,8 +37,6 @@ def registerUser(request):
     usr.is_superuser = False
     usr.set_password(request.POST['password'])
     usr.save()
-    print usr
-    print form
     form = RegistrationForm()
     messages.success(request, 'Registration Completed')
     theme = Configuration.objects.get(pk=1).theme.theme_name

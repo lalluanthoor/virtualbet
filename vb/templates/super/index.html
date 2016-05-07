@@ -11,9 +11,9 @@
 	</tr>
 	{% for bet in bets %}
 		<tr>
-			<td> {{bet.match}} </td>
-			<td> {{bet.user.first_name}} {{bet.user.last_name}} </td>
-			<td> {{bet.team}} </td>
+			<td> {{ bet.match }} </td>
+			<td> {{ bet.user.first_name|title }} {{ bet.user.last_name|title }} </td>
+			<td> {{ bet.team }} </td>
 			<td style="text-align:right"> {{bet.amount}} </td>
 		</tr>
 	{% endfor %}

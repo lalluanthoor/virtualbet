@@ -23,7 +23,7 @@ class ResultForm(forms.ModelForm):
 
 
 class TransferForm(forms.Form):
-    data = [[x.pk, x.first_name + ' ' + x.last_name]
+    data = [[x.pk, x.first_name.title() + ' ' + x.last_name.title()]
             for x in BettingUser.objects.filter(bet_admin=False)]
     to_user = forms.ChoiceField(choices=data, label='To User')
     amount = forms.IntegerField(min_value=1)

@@ -1,10 +1,6 @@
-from datetime import date
-
 from django import forms
 
-from vb.models import Fixture
-
-from .models import Bet, Result, Configuration, BettingUser, WinMultiplier
+from vb.models import Bet, Result, Configuration, BettingUser, WinMultiplier
 
 
 class LoginForm(forms.Form):
@@ -13,8 +9,6 @@ class LoginForm(forms.Form):
 
 
 class BetForm(forms.ModelForm):
-    matches = Fixture.objects.filter(match_date >= date.today())
-    match = forms.ChoiceField(choices=matches, label='New Match')
 
     class Meta:
         model = Bet

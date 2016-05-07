@@ -81,6 +81,8 @@ class Theme(models.Model):
 
 class Configuration(models.Model):
     allow_transfer = models.BooleanField(default=True)
+    max_transfer_amount = models.PositiveIntegerField(default=200000)
+    max_receiver_amount = models.PositiveIntegerField(default=2000000)
     freeze_bet_before = models.PositiveIntegerField(default=30)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, default=1)
 

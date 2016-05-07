@@ -13,7 +13,7 @@ class LoginForm(forms.Form):
 
 
 class BetForm(forms.ModelForm):
-    matches = Fixture.objects.filter('match_date' >= date.today())
+    matches = Fixture.objects.filter(match_date >= date.today())
     match = forms.ChoiceField(choices=matches, label='New Match')
 
     class Meta:

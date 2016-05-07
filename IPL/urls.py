@@ -18,7 +18,7 @@ from django.contrib import admin
 from vb import views
 
 urlpatterns = [
-    url(r'^/$', views.index),
+    url(r'^$', views.index),
     url(r'^vb/', include('vb.urls')),
     url(r'^admin/', admin.site.urls),
 ]

@@ -196,6 +196,6 @@ def luckydraw(request):
         else:
             form = TransferForm()
             theme = Configuration.objects.get(pk=1).theme.theme_name
-            return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw | VirtualBet'}))
+            return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw | VirtualBet', 'active': {'luckydraw': 'active'}}))
     else:
         HttpResponseRedirect('/vb/login')

@@ -11,8 +11,11 @@ from django.db.models import Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from vb.models import Team
+
 from ..forms import BetForm, ResultForm
 from ..models import Bet, BettingUser, Configuration, Fixture, WinMultiplier
+
 
 ZERO = timedelta(0)
 
@@ -73,7 +76,10 @@ def placeBets(request):
                 minutes=Configuration.objects.get(pk=1).getTime())
             if _delta > _allowed:
                 raise Exception("Cannot Bet Now, Time Expired")
-            bet = form.save(commit=False)
+            bet = Bet()
+            bet.match = Fixture.objects.get(pk=request.POST['match'])
+            bet.team = Team.objects.get(pk=request.POST['team'])
+            bet.amount = int(request.POST['amount'])
             bet.user = BettingUser.objects.get(username=request.user)
             if bet.user.account_balance < bet.amount:
                 raise Exception("Not Enough Money")

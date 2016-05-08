@@ -43,7 +43,7 @@ def transferFunds(request):
     else:
         messages.error(request, "Validation Error")
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'theme': theme}))
+    return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'theme': theme, 'title': 'Transfer'}))
 
 
 def addMultiplier(request):
@@ -57,7 +57,7 @@ def addMultiplier(request):
     else:
         messages.error(request, "Validation Error")
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'super/multiplier.html', context={'active': {'multiplier': 'active'}, 'form': form, 'theme': theme}))
+    return HttpResponse(render(request, 'super/multiplier.html', context={'active': {'multiplier': 'active'}, 'form': form, 'theme': theme, 'title': 'Win Multiplier'}))
 
 
 def addMoney(request):

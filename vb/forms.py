@@ -1,6 +1,9 @@
+from datetime import date
+
 from django import forms
 
-from vb.models import Bet, Result, Configuration, BettingUser, WinMultiplier
+from vb.models import Result, Configuration, BettingUser, WinMultiplier,\
+    Fixture, Team
 
 
 class LoginForm(forms.Form):
@@ -8,11 +11,13 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput)
 
 
-class BetForm(forms.ModelForm):
-
-    class Meta:
-        model = Bet
-        exclude = ['user']
+class BetForm(forms.Form):
+    matches = [[x.pk, x.__str__()]
+               for x in Fixture.objects.filter(match_date__gte=date.today())]
+    match = forms.ChoiceField(choices=matches)
+    teams = [[x.pk, x.__str__()] for x in Team.objects.all()]
+    team = forms.ChoiceField(choices=teams)
+    amount = forms.IntegerField(min_value=1)
 
 
 class ResultForm(forms.ModelForm):

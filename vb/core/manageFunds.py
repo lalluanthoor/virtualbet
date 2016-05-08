@@ -71,7 +71,7 @@ def addMoney(request):
     else:
         messages.error(request, 'Validation Error')
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'super/addmoney.html', context={'form': form, 'active': {'addmoney': 'active'}, 'title': 'Add Money | VirtualBet', 'theme': theme}))
+    return HttpResponse(render(request, 'super/addmoney.html', context={'form': form, 'active': {'addmoney': 'active'}, 'title': 'Add Money', 'theme': theme}))
 
 
 def addLuckyDraw(request):
@@ -85,4 +85,4 @@ def addLuckyDraw(request):
     else:
         messages.error(request, 'Validation Error')
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw | VirtualBet', 'active': {'luckydraw': 'active'}}))
+    return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw', 'active': {'luckydraw': 'active'}}))

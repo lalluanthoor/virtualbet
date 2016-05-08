@@ -24,7 +24,7 @@ def configUpdate(request):
     else:
         messages.error(request, "Validation Error")
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration | VirtualBet', 'active': {'config': 'active'}, 'theme': theme}))
+    return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration', 'active': {'config': 'active'}, 'theme': theme}))
 
 
 def registerUser(request):
@@ -40,4 +40,4 @@ def registerUser(request):
     form = RegistrationForm()
     messages.success(request, 'Registration Completed')
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register | VirtualBet'}))
+    return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register'}))

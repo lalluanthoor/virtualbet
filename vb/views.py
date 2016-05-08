@@ -60,7 +60,7 @@ def standings(request):
     else:
         theme = Configuration.objects.get(pk=1).theme.theme_name
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance, first_name, last_name').filter(bet_admin=False), 'title': 'Standings', 'theme': theme}
+            '-account_balance', 'first_name', 'last_name').filter(bet_admin=False), 'title': 'Standings', 'theme': theme}
         return HttpResponse(render(request, 'user/standings.html', context))
 
 
@@ -83,7 +83,7 @@ def betStandings(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         theme = Configuration.objects.get(pk=1).theme.theme_name
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance, first_name, last_name').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings', 'theme': theme}
+            '-account_balance', 'first_name', 'last_name').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings', 'theme': theme}
         return HttpResponse(render(request, 'bet/standings.html', context))
     else:
         return HttpResponseRedirect('/login/')
@@ -126,7 +126,7 @@ def adminStandings(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         theme = Configuration.objects.get(pk=1).theme.theme_name
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance, first_name, last_name').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings', 'theme': theme}
+            '-account_balance', 'first_name', 'last_name').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings', 'theme': theme}
         return HttpResponse(render(request, 'super/standings.html', context))
     else:
         return HttpResponseRedirect('/login/')

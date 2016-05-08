@@ -30,10 +30,15 @@
 				<li class="{{active.standings}}"><a href="/bet/standings/"><span class="glyphicon glyphicon-list-alt"></span> View Standings </a></li>
 				<li class="{{active.placebet}}"><a href="/bet/placebet/"><span class="glyphicon glyphicon-usd"></span> Place Bet </a></li>
 				<li class="{{active.transfer}}"><a href="/bet/transfer/"><span class="glyphicon glyphicon-euro"></span> Transfer Money </a></li>
-				<li><a href="/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><span class="glyphicon glyphicon-user"></span> {{user.first_name|title}} {{user.last_name|title}} </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{user.first_name|title}} {{user.last_name|title}}  <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/bet/changepassword/"><span class="glyphicon glyphicon-lock"></span> Change Password</a></li>
+						<li class="divider" role="separator"></li>
+						<li><a href="/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 	</div>

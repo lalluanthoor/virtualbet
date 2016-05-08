@@ -103,8 +103,8 @@ def addResult(request):
             form.save()
             manageBets(request.POST[u'match'], request.POST[u'winning_team'])
             messages.success(request, "Result Saved")
-        except:
-            messages.error(request, "Result Already Saved")
+        except Exception as e:
+            messages.error(request, e.message)
     else:
         messages.error(request, "Validation Error")
     theme = Configuration.objects.get(pk=1).theme.theme_name

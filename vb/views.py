@@ -113,7 +113,7 @@ def admin(request):
 def addResult(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         if request.method == 'POST':
-            manageBets.addResult(request)
+            return manageBets.addResult(request)
         else:
             form = ResultForm()
             theme = Configuration.objects.get(pk=1).theme.theme_name

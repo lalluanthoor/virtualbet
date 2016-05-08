@@ -19,7 +19,7 @@ def index(request):
         return HttpResponseRedirect('/bet/')
     else:
         theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'user/index.html', context={'title': 'Home', 'theme': theme}))
+        return HttpResponse(render(request, 'user/index.html', context={'title': 'Home', 'theme': theme, 'active': {'home': 'active'}}))
 
 
 def loginForm(request):
@@ -51,7 +51,7 @@ def loginForm(request):
         else:
             form = LoginForm()
         theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login', 'theme': theme}))
+        return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login', 'theme': theme, 'active': {'login': 'active'}}))
 
 
 def changepassword(request):
@@ -72,7 +72,7 @@ def standings(request):
     else:
         theme = Configuration.objects.get(pk=1).theme.theme_name
         context = {'users': BettingUser.objects.order_by(
-            '-account_balance', 'first_name', 'last_name').filter(bet_admin=False), 'title': 'Standings', 'theme': theme}
+            '-account_balance', 'first_name', 'last_name').filter(bet_admin=False), 'title': 'Standings', 'theme': theme, 'active': {'standings': 'active'}}
         return HttpResponse(render(request, 'user/standings.html', context))
 
 
@@ -198,7 +198,7 @@ def register(request):
     else:
         form = RegistrationForm()
         theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register'}))
+        return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register', 'active': {'login': 'active'}}))
 
 
 def luckydraw(request):

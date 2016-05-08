@@ -13,7 +13,7 @@ class LoginForm(forms.Form):
 
 class BetForm(forms.Form):
     matches = [[x.pk, x.__str__()]
-               for x in Fixture.objects.filter(match_date__gte=date.today())]
+               for x in Fixture.objects.order_by('match_number').filter(match_date__gte=date.today())]
     match = forms.ChoiceField(choices=matches)
     teams = [[x.pk, x.__str__()] for x in Team.objects.all()]
     team = forms.ChoiceField(choices=teams)
@@ -29,7 +29,7 @@ class ResultForm(forms.ModelForm):
 
 class TransferForm(forms.Form):
     data = [[x.pk, x.first_name.title() + ' ' + x.last_name.title()]
-            for x in BettingUser.objects.filter(bet_admin=False)]
+            for x in BettingUser.objects.filter(bet_admin=False).order_by('first_name', 'last_name')]
     to_user = forms.ChoiceField(choices=data, label='To User')
     amount = forms.IntegerField(min_value=1)
 

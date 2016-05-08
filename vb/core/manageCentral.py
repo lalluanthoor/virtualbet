@@ -5,7 +5,7 @@ Created on 03-May-2016
 '''
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, forms
+from django.contrib.auth import authenticate, forms, update_session_auth_hash
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -45,26 +45,13 @@ def registerUser(request):
 
 
 def changePassword(request):
-    form = forms.PasswordChangeForm(request.POST)
+    form = forms.PasswordChangeForm(user=request.user, data=request.POST)
     returnTemplate = 'super/changepassword.html' if BettingUser.objects.get(
         username=request.user.username).bet_admin else 'bet/changepassword.html'
     if form.is_valid():
-        username = request.user.username
-        password = request.POST['old_password']
-        user = authenticate(username=username, password=password)
-        if user is None:
-            messages.error(request, 'Current password is wrong')
-        else:
-            npassword = request.POST['new_password']
-            cpassword = request.POST['confirm_password']
-            if npassword != cpassword:
-                messages.error(request, 'Passwords do not match')
-            else:
-                user = BettingUser.objects.get(username=username)
-                user.set_password(npassword)
-                user.save()
-                form = PasswordForm()
-                messages.success(request, 'Password changed')
+        form.save()
+        update_session_auth_hash(request, form.user)
+        messages.success(request, 'Passowrd changed')
     else:
         messages.error(request, 'Validation Error')
     theme = Configuration.objects.get(pk=1).theme.theme_name

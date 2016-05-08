@@ -59,7 +59,7 @@ def changepassword(request):
         if request.method == 'POST':
             return manageCentral.changePassword(request)
         else:
-            form = forms.PasswordChangeForm()
+            form = PasswordForm()
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'bet/changepassword.html', context={'form': form, 'theme': theme, 'title': 'Change Password'}))
     else:

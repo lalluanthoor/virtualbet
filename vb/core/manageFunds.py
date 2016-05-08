@@ -14,19 +14,32 @@ from vb.models import BettingUser, Configuration
 def transferFunds(request):
     form = TransferForm(request.POST)
     if form.is_valid():
-        fromUser = BettingUser.objects.get(
-            username=request.user.username)
-        toUser = BettingUser.objects.get(pk=request.POST['to_user'])
-        transferAmount = int(request.POST['amount'])
-        if fromUser.account_balance < transferAmount:
-            messages.error(request, "Not Enough Money")
+        config = Configuration.objects.get(pk=1)
+        if config.allow_transfer:
+            fromUser = BettingUser.objects.get(
+                username=request.user.username)
+            toUser = BettingUser.objects.get(pk=request.POST['to_user'])
+            transferAmount = int(request.POST['amount'])
+            if transferAmount <= config.max_transfer_amount:
+                if toUser.account_balance <= config.max_receiver_amount:
+                    if fromUser.account_balance < transferAmount:
+                        messages.error(request, "Not Enough Money")
+                    else:
+                        messages.success(request, "Amount Transferred")
+                        fromUser.account_balance -= transferAmount
+                        fromUser.save()
+                        toUser.account_balance += transferAmount
+                        toUser.save()
+                        form = TransferForm()
+                else:
+                    messages.error(
+                        request, 'Cannot transfer funds to user with more than %s virtual cash' % config.max_receiver_amount)
+            else:
+                messages.error(
+                    request, 'Cannot transfer more than %s virtual cash' % config.max_transfer_amount)
         else:
-            messages.success(request, "Amount Transferred")
-            fromUser.account_balance -= transferAmount
-            fromUser.save()
-            toUser.account_balance += transferAmount
-            toUser.save()
-            form = TransferForm()
+            messages.error(
+                request, 'Transfers not allowed at this time. Check back later.')
     else:
         messages.error(request, "Validation Error")
     theme = Configuration.objects.get(pk=1).theme.theme_name

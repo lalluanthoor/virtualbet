@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>{{title}}</title>
+	<title>{{title}} | VirtualBet</title>
 {# Load the tag library #}
 {% load bootstrap3 %}
 
@@ -22,15 +22,15 @@
         		<span class="icon-bar"></span>
         		<span class="icon-bar"></span> 
       		</button>
-			<a class="navbar-brand" href="/vb/bet/"> vb </a>
+			<a class="navbar-brand" href="/bet/"> vb </a>
 		</div>
 		<div class="navbar-collapse collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="{{active.home}}"><a href="/vb/bet/"> <span class="glyphicon glyphicon-home"></span> Home </a></li>
-				<li class="{{active.standings}}"><a href="/vb/bet/standings/"><span class="glyphicon glyphicon-list-alt"></span> View Standings </a></li>
-				<li class="{{active.placebet}}"><a href="/vb/bet/placebet/"><span class="glyphicon glyphicon-usd"></span> Place Bet </a></li>
-				<li class="{{active.transfer}}"><a href="/vb/bet/transfer/"><span class="glyphicon glyphicon-euro"></span> Transfer Money </a></li>
-				<li><a href="/vb/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+				<li class="{{active.home}}"><a href="/bet/"> <span class="glyphicon glyphicon-home"></span> Home </a></li>
+				<li class="{{active.standings}}"><a href="/bet/standings/"><span class="glyphicon glyphicon-list-alt"></span> View Standings </a></li>
+				<li class="{{active.placebet}}"><a href="/bet/placebet/"><span class="glyphicon glyphicon-usd"></span> Place Bet </a></li>
+				<li class="{{active.transfer}}"><a href="/bet/transfer/"><span class="glyphicon glyphicon-euro"></span> Transfer Money </a></li>
+				<li><a href="/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a href="#"><span class="glyphicon glyphicon-user"></span> {{user.first_name|title}} {{user.last_name|title}} </a></li>
@@ -42,7 +42,7 @@
 <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="/vb/"> vb </a>
+			<a class="navbar-brand" href="/"> vb </a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">

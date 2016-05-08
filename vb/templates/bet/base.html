@@ -1,53 +1,61 @@
 <html>
-	<title>{{title}}</title>
+<head>
+	<title>{{title}} | VirtualBet</title>
 {# Load the tag library #}
 {% load bootstrap3 %}
 
 {# Load CSS and JavaScript #}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% bootstrap_css %}
 {% bootstrap_javascript %}
 {% with 'https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/'|add:theme|add:'/bootstrap.css' as theme_url %}
 <link rel="stylesheet" href="{{ theme_url }}" />
 {% endwith %}
-
-
+</head>
+<body>
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container-fluid">
+	<div class="container">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         		<span class="icon-bar"></span>
         		<span class="icon-bar"></span>
         		<span class="icon-bar"></span> 
       		</button>
-			<a class="navbar-brand" href="/vb/bet/"> vb </a>
+			<a class="navbar-brand" href="/bet/"> vb </a>
 		</div>
 		<div class="navbar-collapse collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li class="{{active.home}}"><a href="/vb/bet/"> <span class="glyphicon glyphicon-home"></span> Home </a></li>
-				<li class="{{active.standings}}"><a href="/vb/bet/standings/"><span class="glyphicon glyphicon-list-alt"></span> View Standings </a></li>
-				<li class="{{active.placebet}}"><a href="/vb/bet/placebet/"><span class="glyphicon glyphicon-usd"></span> Place Bet </a></li>
-				<li class="{{active.transfer}}"><a href="/vb/bet/transfer/"><span class="glyphicon glyphicon-euro"></span> Transfer Money </a></li>
-				<li><a href="/vb/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+				<li class="{{active.home}}"><a href="/bet/"> <span class="glyphicon glyphicon-home"></span> Home </a></li>
+				<li class="{{active.standings}}"><a href="/bet/standings/"><span class="glyphicon glyphicon-list-alt"></span> View Standings </a></li>
+				<li class="{{active.placebet}}"><a href="/bet/placebet/"><span class="glyphicon glyphicon-usd"></span> Place Bet </a></li>
+				<li class="{{active.transfer}}"><a href="/bet/transfer/"><span class="glyphicon glyphicon-euro"></span> Transfer Money </a></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li><a href="#"><span class="glyphicon glyphicon-user"></span> {{user.first_name}} {{user.last_name}} </a></li>
+				<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{user.first_name|title}} {{user.last_name|title}}  <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/changepassword/"><span class="glyphicon glyphicon-lock"></span> Change Password</a></li>
+						<li class="divider" role="separator"></li>
+						<li><a href="/logout/"> <span class="glyphicon glyphicon-log-out"></span> Logout </a></li>
+					</ul>
+				</li>
 			</ul>
 		</div>
 	</div>
 </nav>
-<div class="container" style="padding-top: 70px">{% block content %}{% endblock %}</div>
+<div class="container" style="padding-top: 70px; padding-bottom:70px;">{% block content %}{% endblock %}</div>
 <div class="navbar navbar-default navbar-fixed-bottom" role="navigation">
 	<div class="container">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="/vb/"> vb </a>
+			<a class="navbar-brand" href="/"> vb </a>
 		</div>
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="mailto:lallu.anthoor@sap.com"> <span class="glyphicon glyphicon-user"></span> Web Master
 				</a></li>
 			</ul>
-			</span>
 		</div>
 	</div>
 </div>
+</body>
+</html>

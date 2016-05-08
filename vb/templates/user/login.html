@@ -5,10 +5,10 @@
 {% block content %}
 {% bootstrap_messages %}
 <div class="col-md-3"></div>
-<form action="/vb/login/" method="post" role="form" class="col-md-6">
+<form action="/login/" method="post" role="form" class="col-md-6">
     {% csrf_token %}
     <legend>Login to Bet <small>virtual money... real prizes...</small></legend>
     {% bootstrap_form form %}
-    {% buttons submit='Login' reset='Clear' %} {% bootstrap_button "Register" button_type="link" href="/vb/register/" button_class="btn btn-link" %}{% endbuttons %}
+    {% buttons submit='Login' reset='Clear' %} {% bootstrap_button "Register" button_type="link" href="/register/" button_class="btn btn-link" %}{% endbuttons %}
 </form>
 {% endblock %}

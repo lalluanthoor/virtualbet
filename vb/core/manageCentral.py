@@ -1,10 +1,9 @@
 '''
-Created on 03-May-2016
-
 @author: lalluanthoor
 '''
 
 from django.contrib import messages
+from django.contrib.auth import forms, update_session_auth_hash
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -24,7 +23,7 @@ def configUpdate(request):
     else:
         messages.error(request, "Validation Error")
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration | VirtualBet', 'active': {'config': 'active'}, 'theme': theme}))
+    return HttpResponse(render(request, 'super/config.html', context={'form': form, 'title': 'Configuration', 'active': {'config': 'active'}, 'theme': theme}))
 
 
 def registerUser(request):
@@ -37,9 +36,21 @@ def registerUser(request):
     usr.is_superuser = False
     usr.set_password(request.POST['password'])
     usr.save()
-    print usr
-    print form
     form = RegistrationForm()
     messages.success(request, 'Registration Completed')
     theme = Configuration.objects.get(pk=1).theme.theme_name
-    return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register | VirtualBet'}))
+    return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register'}))
+
+
+def changePassword(request):
+    form = forms.PasswordChangeForm(user=request.user, data=request.POST)
+    returnTemplate = 'super/changepassword.html' if BettingUser.objects.get(
+        username=request.user.username).bet_admin else 'bet/changepassword.html'
+    if form.is_valid():
+        form.save()
+        update_session_auth_hash(request, form.user)
+        messages.success(request, 'Passowrd changed')
+    else:
+        messages.error(request, 'Validation Error')
+    theme = Configuration.objects.get(pk=1).theme.theme_name
+    return HttpResponse(render(request, returnTemplate, context={'form': form, 'theme': theme, 'title': 'Change Password'}))

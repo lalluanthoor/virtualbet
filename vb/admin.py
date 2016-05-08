@@ -1,3 +1,6 @@
+'''
+@author: lalluanthoor
+'''
 from django.contrib import admin
 
 from vb.models import Bet, BettingUser, Configuration, Fixture, Result, Team, Theme, WinMultiplier

@@ -47,7 +47,7 @@ def manageBets(match, winTeam):
     totalWinBet = getTotalWinnersBet(match, winTeam)
     winners = Bet.objects.filter(match=match, team=winTeam)
     multiply = WinMultiplier.objects.filter(match=match, team=winTeam)
-    multiplier = 1 if multiply is None else multiply.multiplier
+    multiplier = 1 if multiply is None else multiply[0].multiplier
 
     for winner in winners:
         winAmount = winner.amount + \

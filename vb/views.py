@@ -1,7 +1,7 @@
 import os
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, forms
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
@@ -59,7 +59,7 @@ def changepassword(request):
         if request.method == 'POST':
             return manageCentral.changePassword(request)
         else:
-            form = PasswordForm()
+            form = forms.PasswordChangeForm()
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'bet/changepassword.html', context={'form': form, 'theme': theme, 'title': 'Change Password'}))
     else:

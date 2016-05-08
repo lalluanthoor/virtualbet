@@ -58,3 +58,9 @@ class RegistrationForm(forms.ModelForm):
         model = BettingUser
         fields = ['username', 'first_name',
                   'last_name', 'email', 'password']
+
+
+class PasswordForm(forms.Form):
+    old_password = forms.PasswordInput()
+    new_password = forms.PasswordInput(min_length=8)
+    confirm_password = forms.PasswordInput(min_length=8)

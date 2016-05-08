@@ -6,7 +6,7 @@ from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
-from vb.forms import ConfigForm, RegistrationForm, AddMoneyForm
+from vb.forms import ConfigForm, RegistrationForm, AddMoneyForm, PasswordForm
 
 from .core import manageBets, manageCentral, manageFunds
 from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
@@ -52,6 +52,18 @@ def loginForm(request):
             form = LoginForm()
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login', 'theme': theme}))
+
+
+def changepassword(request):
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            return manageCentral.changePassword(request)
+        else:
+            form = PasswordForm()
+            theme = Configuration.objects.get(pk=1).theme.theme_name
+            return HttpResponse(render(request, 'bet/changepassword.html', context={'form': form, 'theme': theme, 'title': 'Change Password'}))
+    else:
+        return HttpResponseRedirect('/login/')
 
 
 def standings(request):

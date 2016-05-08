@@ -5,11 +5,12 @@ Created on 03-May-2016
 '''
 
 from django.contrib import messages
+from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from vb.forms import ConfigForm, RegistrationForm
-from vb.models import Configuration
+from vb.forms import ConfigForm, RegistrationForm, PasswordForm
+from vb.models import Configuration, BettingUser
 
 
 def configUpdate(request):
@@ -41,3 +42,30 @@ def registerUser(request):
     messages.success(request, 'Registration Completed')
     theme = Configuration.objects.get(pk=1).theme.theme_name
     return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register'}))
+
+
+def changePassword(request):
+    form = PasswordForm(request.POST)
+    returnTemplate = 'super/index.html' if BettingUser.objects.get(
+        username=request.user.username).bet_admin else 'bet/index.html'
+    if form.is_valid():
+        username = request.user.username
+        password = request.POST['old_password']
+        user = authenticate(username, password)
+        if user is None:
+            messages.error(request, 'Current password is wrong')
+        else:
+            npassword = request.POST['new_password']
+            cpassword = request.POST['confirm_password']
+            if npassword != cpassword:
+                messages.error(request, 'Passwords do not match')
+            else:
+                user = BettingUser.objects.get(username=username)
+                user.set_password(npassword)
+                user.save()
+                form = PasswordForm()
+                messages.success(request, 'Password changed')
+    else:
+        messages.error(request, 'Validation Error')
+    theme = Configuration.objects.get(pk=1).theme.theme_name
+    return HttpResponse(render(request, returnTemplate, context={'form': form, 'theme': theme, 'title': 'Change Password'}))

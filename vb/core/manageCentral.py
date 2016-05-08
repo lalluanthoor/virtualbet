@@ -46,8 +46,8 @@ def registerUser(request):
 
 def changePassword(request):
     form = PasswordForm(request.POST)
-    returnTemplate = 'super/index.html' if BettingUser.objects.get(
-        username=request.user.username).bet_admin else 'bet/index.html'
+    returnTemplate = 'super/changepassword.html' if BettingUser.objects.get(
+        username=request.user.username).bet_admin else 'bet/changepassword.html'
     if form.is_valid():
         username = request.user.username
         password = request.POST['old_password']

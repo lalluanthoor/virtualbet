@@ -62,5 +62,5 @@ class RegistrationForm(forms.ModelForm):
 
 class PasswordForm(forms.Form):
     old_password = forms.PasswordInput()
-    new_password = forms.PasswordInput(min_length=8)
-    confirm_password = forms.PasswordInput(min_length=8)
+    new_password = forms.PasswordInput()
+    confirm_password = forms.PasswordInput()

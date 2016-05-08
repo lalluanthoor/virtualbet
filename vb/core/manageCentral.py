@@ -5,7 +5,7 @@ Created on 03-May-2016
 '''
 
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, forms
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -45,13 +45,13 @@ def registerUser(request):
 
 
 def changePassword(request):
-    form = PasswordForm(request.POST)
+    form = forms.PasswordChangeForm(request.POST)
     returnTemplate = 'super/changepassword.html' if BettingUser.objects.get(
         username=request.user.username).bet_admin else 'bet/changepassword.html'
     if form.is_valid():
         username = request.user.username
         password = request.POST['old_password']
-        user = authenticate(username, password)
+        user = authenticate(username=username, password=password)
         if user is None:
             messages.error(request, 'Current password is wrong')
         else:

@@ -1,20 +1,25 @@
-import os
+'''
+@author: lalluanthoor
 
+Views in the VirtualBet application
+'''
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout, forms
+from django.contrib.auth import authenticate, forms, login, logout
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
-from vb.forms import ConfigForm, RegistrationForm, AddMoneyForm, PasswordForm
+from vb.core import manageBets, manageCentral, manageFunds
+from vb.forms import AddMoneyForm, BetForm, ConfigForm, LoginForm, MultiplierForm, RegistrationForm, ResultForm, TransferForm
+from vb.models import Bet, BettingUser, Configuration
 
-from .core import manageBets, manageCentral, manageFunds
-from .forms import ResultForm, LoginForm, BetForm, TransferForm, MultiplierForm
-from .models import BettingUser, Bet, Configuration
+
+'''
+Public section
+'''
 
 
 def index(request):
-    print os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if request.user.is_authenticated():
         return HttpResponseRedirect('/bet/')
     else:
@@ -54,16 +59,13 @@ def loginForm(request):
         return HttpResponse(render(request, 'user/login.html', context={'form': form, 'title': 'Login', 'theme': theme, 'active': {'login': 'active'}}))
 
 
-def changepassword(request):
-    if request.user.is_authenticated():
-        if request.method == 'POST':
-            return manageCentral.changePassword(request)
-        else:
-            form = forms.PasswordChangeForm(user=request.user)
-            theme = Configuration.objects.get(pk=1).theme.theme_name
-            return HttpResponse(render(request, 'bet/changepassword.html', context={'form': form, 'theme': theme, 'title': 'Change Password'}))
+def register(request):
+    if request.method == 'POST':
+        return manageCentral.registerUser(request)
     else:
-        return HttpResponseRedirect('/login/')
+        form = RegistrationForm()
+        theme = Configuration.objects.get(pk=1).theme.theme_name
+        return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register', 'active': {'login': 'active'}}))
 
 
 def standings(request):
@@ -76,6 +78,11 @@ def standings(request):
         return HttpResponse(render(request, 'user/standings.html', context))
 
 
+'''
+View functions for betting user (non-admin)
+'''
+
+
 def bet(request):
     if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
         theme = Configuration.objects.get(pk=1).theme.theme_name
@@ -83,12 +90,7 @@ def bet(request):
             '-match').filter(user=request.user), 'active': {'home': "active"}, 'title': 'Bet Home', 'theme': theme}
         return HttpResponse(render(request, 'bet/index.html', context=context))
     else:
-        return HttpResponseRedirect('/login')
-
-
-def logoutForm(request):
-    logout(request)
-    return HttpResponseRedirect('/login')
+        return HttpResponseRedirect('/login/')
 
 
 def betStandings(request):
@@ -113,13 +115,30 @@ def placeBet(request):
         return HttpResponseRedirect('/login/')
 
 
+def transfer(request):
+    if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
+        if request.method == 'POST':
+            return manageFunds.transferFunds(request)
+        else:
+            form = TransferForm()
+            theme = Configuration.objects.get(pk=1).theme.theme_name
+            return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'title': 'Transfers', 'theme': theme}))
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+'''
+View functions for bet administrator
+'''
+
+
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         bets = Bet.objects.order_by('-match')
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': bets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:
-        return HttpResponseRedirect('/login')
+        return HttpResponseRedirect('/login/')
 
 
 def addResult(request):
@@ -131,7 +150,7 @@ def addResult(request):
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'super/addresult.html', context={'active': {'addresult': 'active'}, 'form': form, 'title': 'Add Result', 'theme': theme}))
     else:
-        return HttpResponseRedirect('/login')
+        return HttpResponseRedirect('/login/')
 
 
 def adminStandings(request):
@@ -140,18 +159,6 @@ def adminStandings(request):
         context = {'users': BettingUser.objects.order_by(
             '-account_balance', 'first_name', 'last_name').filter(bet_admin=False), 'active': {'standings': "active"}, 'title': 'Standings', 'theme': theme}
         return HttpResponse(render(request, 'super/standings.html', context))
-    else:
-        return HttpResponseRedirect('/login/')
-
-
-def transfer(request):
-    if request.user.is_authenticated() and not BettingUser.objects.get(username=request.user.username).bet_admin:
-        if request.method == 'POST':
-            return manageFunds.transferFunds(request)
-        else:
-            form = TransferForm()
-            theme = Configuration.objects.get(pk=1).theme.theme_name
-            return HttpResponse(render(request, 'bet/transfer.html', context={'form': form, 'active': {'transfer': 'active'}, 'title': 'Transfers', 'theme': theme}))
     else:
         return HttpResponseRedirect('/login/')
 
@@ -189,16 +196,7 @@ def addmoney(request):
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'super/addmoney.html', context={'form': form, 'active': {'addmoney': 'active'}, 'title': 'Add Money', 'theme': theme}))
     else:
-        HttpResponseRedirect('/login/')
-
-
-def register(request):
-    if request.method == 'POST':
-        return manageCentral.registerUser(request)
-    else:
-        form = RegistrationForm()
-        theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'user/registration.html', context={'form': form, 'theme': theme, 'title': 'Register', 'active': {'login': 'active'}}))
+        return HttpResponseRedirect('/login/')
 
 
 def luckydraw(request):
@@ -210,4 +208,26 @@ def luckydraw(request):
             theme = Configuration.objects.get(pk=1).theme.theme_name
             return HttpResponse(render(request, 'super/luckydraw.html', context={'form': form, 'theme': theme, 'title': 'Lucky Draw', 'active': {'luckydraw': 'active'}}))
     else:
-        HttpResponseRedirect('/login')
+        return HttpResponseRedirect('/login/')
+
+
+'''
+Common view functions
+'''
+
+
+def changepassword(request):
+    if request.user.is_authenticated():
+        if request.method == 'POST':
+            return manageCentral.changePassword(request)
+        else:
+            form = forms.PasswordChangeForm(user=request.user)
+            theme = Configuration.objects.get(pk=1).theme.theme_name
+            return HttpResponse(render(request, 'bet/changepassword.html', context={'form': form, 'theme': theme, 'title': 'Change Password'}))
+    else:
+        return HttpResponseRedirect('/login/')
+
+
+def logoutForm(request):
+    logout(request)
+    return HttpResponseRedirect('/login/')

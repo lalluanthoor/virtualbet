@@ -1,9 +1,11 @@
+'''
+@author: lalluanthoor
+'''
 from datetime import date
-
 from django import forms
 
-from vb.models import Result, Configuration, BettingUser, WinMultiplier,\
-    Fixture, Team
+from vb.models import BettingUser, Configuration, Fixture
+from vb.models import Result, Team, WinMultiplier
 
 
 class LoginForm(forms.Form):
@@ -58,10 +60,3 @@ class RegistrationForm(forms.ModelForm):
         model = BettingUser
         fields = ['username', 'first_name',
                   'last_name', 'email', 'password']
-
-
-class PasswordForm(forms.Form):
-    old_password = forms.CharField(widget=forms.PasswordInput())
-    new_password = forms.CharField(min_length=8, widget=forms.PasswordInput())
-    confirm_password = forms.CharField(
-        min_length=8, widget=forms.PasswordInput())

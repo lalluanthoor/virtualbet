@@ -1,6 +1,4 @@
 '''
-Created on 01-May-2016
-
 @author: lalluanthoor
 '''
 from django.contrib import messages
@@ -20,8 +18,8 @@ def transferFunds(request):
                 username=request.user.username)
             toUser = BettingUser.objects.get(pk=request.POST['to_user'])
             transferAmount = int(request.POST['amount'])
-            if transferAmount <= config.max_transfer_amount:
-                if toUser.account_balance <= config.max_receiver_amount:
+            if transferAmount <= config.max_transfer_amount or config.max_transfer_amount == -1:
+                if toUser.account_balance <= config.max_receiver_amount or config.max_receiver_amount == -1:
                     if fromUser.account_balance < transferAmount:
                         messages.error(request, "Not Enough Money")
                     else:

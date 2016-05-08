@@ -1,9 +1,7 @@
 '''
-Created on 30-Apr-2016
-
 @author: lalluanthoor
 '''
-from datetime import datetime, time, timedelta, tzinfo
+from datetime import datetime, timedelta, tzinfo
 from math import ceil
 
 from django.contrib import messages
@@ -11,17 +9,14 @@ from django.db.models import Sum, Q
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from vb.models import Team
-
-from ..forms import BetForm, ResultForm
-from ..models import Bet, BettingUser, Configuration, Fixture, WinMultiplier
+from vb.forms import BetForm, ResultForm
+from vb.models import Bet, BettingUser, Configuration, Fixture, Team, WinMultiplier
 
 
 ZERO = timedelta(0)
 
 
 class FixedOffset(tzinfo):
-    """Fixed offset in minutes east from UTC."""
 
     def __init__(self, offset, name):
         self.__offset = timedelta(minutes=offset)

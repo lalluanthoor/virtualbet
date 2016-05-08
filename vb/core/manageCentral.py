@@ -1,16 +1,14 @@
 '''
-Created on 03-May-2016
-
 @author: lalluanthoor
 '''
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, forms, update_session_auth_hash
+from django.contrib.auth import forms, update_session_auth_hash
 from django.http import HttpResponse
 from django.shortcuts import render
 
-from vb.forms import ConfigForm, RegistrationForm, PasswordForm
-from vb.models import Configuration, BettingUser
+from vb.forms import ConfigForm, RegistrationForm
+from vb.models import BettingUser, Configuration
 
 
 def configUpdate(request):

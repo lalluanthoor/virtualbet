@@ -1,3 +1,6 @@
+"""
+@author: lalluanthoor
+"""
 from __future__ import unicode_literals
 
 from django.contrib.auth.models import User
@@ -81,8 +84,8 @@ class Theme(models.Model):
 
 class Configuration(models.Model):
     allow_transfer = models.BooleanField(default=True)
-    max_transfer_amount = models.PositiveIntegerField(default=200000)
-    max_receiver_amount = models.PositiveIntegerField(default=2000000)
+    max_transfer_amount = models.IntegerField(default=-1)
+    max_receiver_amount = models.IntegerField(default=-1)
     freeze_bet_before = models.PositiveIntegerField(default=30)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, default=1)
 

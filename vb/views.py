@@ -139,7 +139,7 @@ def admin(request):
         futureMatches = Fixture.objects.filter(match_date__gte=date.today())
         betAggregate = []
         for match in futureMatches:
-            betAggregate.push({'home': Bet.objects.filter(match=match, team=match.home_team).aggregate(
+            betAggregate.append({'home': Bet.objects.filter(match=match, team=match.home_team).aggregate(
                 Sum('amount')), 'away': Bet.objects.filter(match=match, team=match.away_team).aggregate(Sum('amount'))})
 
         futureBets = []

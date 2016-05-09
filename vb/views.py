@@ -137,7 +137,7 @@ View functions for bet administrator
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         futureMatches = Fixture.objects.filter(match_date__gte=date.today())
-        data = Fixture.objects.annotate(Sum('amount'))
+        data = Bet.objects.annotate(Sum('amount'))
         futureBets = []
         for match in futureMatches:
             if len(Bet.objects.filter(match=match)) != 0:

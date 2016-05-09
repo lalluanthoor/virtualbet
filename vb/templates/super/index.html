@@ -18,5 +18,9 @@
 		</tr>
 	{% endfor %}
 </table>
-
+{% if today %}
+{{ today }}
+{% else %}
+bye bye
+{% endif %}
 {% endblock %}

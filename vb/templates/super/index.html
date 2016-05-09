@@ -19,8 +19,8 @@
 		{% for bet in match %}
 		<tr>
 			<td> {{ bet.match }} </td>
-			<td> {{ bet.user.first_name|title }} {{ bet.user.last_name|title }} </td>
-			<td> {{ bet.team }} </td>
+			<td> {{ bet.user.first_name|title }} </td>
+			<td> {{ bet.team.team_abbr }} </td>
 			<td style="text-align:right"> {{bet.amount|intcomma}} </td>
 		</tr>
 		{% endfor %}
@@ -29,7 +29,7 @@
 {% else %}
 No matches today!
 {% endif %}
-
+<div style="height:3%;"> </div>
 {% if data %}
 	<table class="table">
 	{% for row in data %}

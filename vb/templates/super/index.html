@@ -30,6 +30,20 @@
 No matches today!
 {% endif %}
 
-{{ data }}
+{% if data %}
+	<table class="table">
+	{% for row in data %}
+			<tr>
+				<th colspan="4">{{ row.match }}</th>
+			</tr>
+			<tr>
+				<th>Home Team</th><td>{{ row.home.amount__sum }}</td>
+				<th>Away Team</th><td>{{ row.away.amount__sum }}</td>
+			</tr>
+	{% endfor %}
+	</table>
+{% else %}
+	No Data!
+{% endfor %}
 
 {% endblock %}

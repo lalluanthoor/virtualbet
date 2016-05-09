@@ -29,16 +29,17 @@
 {% else %}
 No matches today!
 {% endif %}
-<div style="height:3%;"> </div>
+<div style="height:6%;"> </div>
 {% if data %}
 	<table class="table">
+	<tr><th colspan="4" style="text-align:center">Team-wise Aggregate of Bets </th></tr>
 	{% for row in data %}
 			<tr>
 				<th colspan="4">{{ row.match }}</th>
 			</tr>
 			<tr>
-				<th>Home Team</th><td style="text-align:right;">{{ row.home.amount__sum|intcomma }}</td>
-				<th>Away Team</th><td style="text-align:right;">{{ row.away.amount__sum|intcomma }}</td>
+				<th style="text-align:right">Home Team</th><td style="text-align:left;">{{ row.home.amount__sum|intcomma }}</td>
+				<th style="text-align:right">Away Team</th><td style="text-align:left;">{{ row.away.amount__sum|intcomma }}</td>
 			</tr>
 			<tr><td colspan="4"> </td></tr>
 	{% endfor %}

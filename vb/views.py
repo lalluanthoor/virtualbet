@@ -142,7 +142,7 @@ def admin(request):
         futureMatches = Fixture.objects.filter(match_date__gt=date.today())
         futureBets = []
         for match in futureMatches:
-            if Bet.objects.filter(match=match) != None:
+            if len(Bet.objects.filter(match=match)) != 0:
                 futureBets.append(Bet.objects.filter(match=match))
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': futureBets, 'today': todaysBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))

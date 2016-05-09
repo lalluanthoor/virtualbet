@@ -139,7 +139,8 @@ def admin(request):
         todaysBets = []
         for match in todaysMatches:
             todaysBets.append(Bet.objects.filter(match=match))
-        bets = Bet.objects.order_by('-match')
+        bets = Bet.objects.filter(
+            match_date__gt=date.today()).order_by('-match')
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': bets, 'today': todaysBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:

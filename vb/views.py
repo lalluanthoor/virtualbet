@@ -139,9 +139,9 @@ def admin(request):
         futureMatches = Fixture.objects.filter(match_date__gte=date.today())
         betAggregate = []
         for match in futureMatches:
-            betAggregate.append({'match': match, 'home': Bet.objects.filter(match=match, team=match.home_team).aggregate(
-                Sum('amount')), 'away': Bet.objects.filter(match=match, team=match.away_team).aggregate(Sum('amount'))})
-
+            if Bet.objects.filter(match=match, team=match.away_team).aggregate(Sum('amount')).amount__sum or Bet.objects.filter(match=match, team=match.home_team).aggregate(Sum('amount')).amount__sum:
+                betAggregate.append({'match': match, 'home': Bet.objects.filter(match=match, team=match.home_team).aggregate(
+                    Sum('amount')), 'away': Bet.objects.filter(match=match, team=match.away_team).aggregate(Sum('amount'))})
         futureBets = []
         for match in futureMatches:
             if len(Bet.objects.filter(match=match)) != 0:

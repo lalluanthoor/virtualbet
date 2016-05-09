@@ -1,29 +1,11 @@
 {% extends 'super/base.html' %}
 
+{% load bootstrap3 %}
+{% load humanize %}
+
 {% block content %}
 
-{% if today %}
-	{% for match in today %}
-	<table class="table">
-		<tr>
-			<th>Match</th>
-			<th>Better</th>
-			<th>Team</th>
-			<th style="text-align:right">Amount</th>
-		</tr>
-		{% for bet in match %}
-		<tr>
-			<td> {{ bet.match }} </td>
-			<td> {{ bet.user.first_name|title }} {{ bet.user.last_name|title }} </td>
-			<td> {{ bet.team }} </td>
-			<td style="text-align:right"> {{bet.amount}} </td>
-		</tr>
-		{% endfor %}
-	</table>
-	{% endfor %}
-{% else %}
-No matches today!
-{% endif %}
+{% bootstrap_messages %}
 
 {% if bets %}
 	{% for match in bets %}
@@ -39,7 +21,7 @@ No matches today!
 			<td> {{ bet.match }} </td>
 			<td> {{ bet.user.first_name|title }} {{ bet.user.last_name|title }} </td>
 			<td> {{ bet.team }} </td>
-			<td style="text-align:right"> {{bet.amount}} </td>
+			<td style="text-align:right"> {{bet.amount|intcomma}} </td>
 		</tr>
 		{% endfor %}
 	</table>

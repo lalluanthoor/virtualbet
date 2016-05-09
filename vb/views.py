@@ -135,17 +135,13 @@ View functions for bet administrator
 
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
-        todaysMatches = Fixture.objects.filter(match_date=date.today())
-        todaysBets = []
-        for match in todaysMatches:
-            todaysBets.append(Bet.objects.filter(match=match))
-        futureMatches = Fixture.objects.filter(match_date__gt=date.today())
+        futureMatches = Fixture.objects.filter(match_date__gte=date.today())
         futureBets = []
         for match in futureMatches:
             if len(Bet.objects.filter(match=match)) != 0:
                 futureBets.append(Bet.objects.filter(match=match))
         theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': futureBets, 'today': todaysBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
+        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': futureBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/login/')
 

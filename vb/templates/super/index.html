@@ -11,10 +11,10 @@
 	{% for match in bets %}
 	<table class="table">
 		<tr>
-			<th>Match</th>
-			<th>Better</th>
-			<th>Team</th>
-			<th style="text-align:right">Amount</th>
+			<th style="width:30%">Match</th>
+			<th style="width:30%">Better</th>
+			<th style="width:10%">Team</th>
+			<th style="width:30%;text-align:right;">Amount</th>
 		</tr>
 		{% for bet in match %}
 		<tr>
@@ -35,7 +35,7 @@ No matches today!
 	<tr><th colspan="4" style="text-align:center">Team-wise Aggregate of Bets </th></tr>
 	{% for row in data %}
 			<tr>
-				<th colspan="4">{{ row.match }}</th>
+				<th colspan="4" style="text-align:center">{{ row.match }}</th>
 			</tr>
 			<tr>
 				<th style="text-align:right">Home Team</th><td style="text-align:left;">{{ row.home.amount__sum|intcomma }}</td>

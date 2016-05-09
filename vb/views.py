@@ -11,6 +11,7 @@ from datetime import date
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, forms, login, logout
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
@@ -136,12 +137,13 @@ View functions for bet administrator
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
         futureMatches = Fixture.objects.filter(match_date__gte=date.today())
+        data = Fixture.objects.annotate(Sum('amount'))
         futureBets = []
         for match in futureMatches:
             if len(Bet.objects.filter(match=match)) != 0:
                 futureBets.append(Bet.objects.filter(match=match))
         theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': futureBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
+        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'data': data, 'bets': futureBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/login/')
 

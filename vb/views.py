@@ -3,6 +3,7 @@
 
 Views in the VirtualBet application
 '''
+
 '''
 Public section
 '''

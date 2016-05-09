@@ -11,10 +11,10 @@
 	{% for match in bets %}
 	<table class="table">
 		<tr>
-			<th style="width:30%">Match</th>
-			<th style="width:30%">Better</th>
+			<th style="width:40%">Match</th>
+			<th style="width:25%">Better</th>
 			<th style="width:10%">Team</th>
-			<th style="width:30%;text-align:right;">Amount</th>
+			<th style="width:25%;text-align:right;">Amount</th>
 		</tr>
 		{% for bet in match %}
 		<tr>
@@ -24,6 +24,7 @@
 			<td style="text-align:right"> {{bet.amount|intcomma}} </td>
 		</tr>
 		{% endfor %}
+		<tr><td colspan="4"> </td></tr>
 	</table>
 	{% endfor %}
 {% else %}

@@ -37,9 +37,10 @@ No matches today!
 				<th colspan="4">{{ row.match }}</th>
 			</tr>
 			<tr>
-				<th>Home Team</th><td>{{ row.home.amount__sum }}</td>
-				<th>Away Team</th><td>{{ row.away.amount__sum }}</td>
+				<th>Home Team</th><td style="text-align:right;">{{ row.home.amount__sum|intcomma }}</td>
+				<th>Away Team</th><td style="text-align:right;">{{ row.away.amount__sum|intcomma }}</td>
 			</tr>
+			<tr><td colspan="4"> </td></tr>
 	{% endfor %}
 	</table>
 {% else %}

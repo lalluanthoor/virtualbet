@@ -1,22 +1,52 @@
 {% extends 'super/base.html' %}
 
+{% load bootstrap3 %}
+{% load humanize %}
+
 {% block content %}
 
-<table class="table">
-	<tr>
-		<th>Match</th>
-		<th>Better</th>
-		<th>Team</th>
-		<th style="text-align:right">Amount</th>
-	</tr>
-	{% for bet in bets %}
+{% bootstrap_messages %}
+
+{% if bets %}
+	{% for match in bets %}
+	<table class="table">
+		<tr>
+			<th style="width:40%">Match</th>
+			<th style="width:25%">Better</th>
+			<th style="width:10%">Team</th>
+			<th style="width:25%;text-align:right;">Amount</th>
+		</tr>
+		{% for bet in match %}
 		<tr>
 			<td> {{ bet.match }} </td>
-			<td> {{ bet.user.first_name|title }} {{ bet.user.last_name|title }} </td>
-			<td> {{ bet.team }} </td>
-			<td style="text-align:right"> {{bet.amount}} </td>
+			<td> {{ bet.user.first_name|title }} </td>
+			<td> {{ bet.team.team_abbr }} </td>
+			<td style="text-align:right"> {{bet.amount|intcomma}} </td>
 		</tr>
+		{% endfor %}
+		<tr><td colspan="4"> </td></tr>
+	</table>
 	{% endfor %}
-</table>
+{% else %}
+No matches today!
+{% endif %}
+<div style="height:6%;"> </div>
+{% if data %}
+	<table class="table">
+	<tr><th colspan="4" style="text-align:center">Team-wise Aggregate of Bets </th></tr>
+	{% for row in data %}
+			<tr>
+				<th colspan="4" style="text-align:center">{{ row.match }}</th>
+			</tr>
+			<tr>
+				<th style="text-align:right">Home Team</th><td style="text-align:left;">{{ row.home.amount__sum|intcomma }}</td>
+				<th style="text-align:right">Away Team</th><td style="text-align:left;">{{ row.away.amount__sum|intcomma }}</td>
+			</tr>
+			<tr><td colspan="4"> </td></tr>
+	{% endfor %}
+	</table>
+{% else %}
+	No Data!
+{% endif %}
 
 {% endblock %}

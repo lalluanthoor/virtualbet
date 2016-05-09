@@ -3,20 +3,22 @@
 
 Views in the VirtualBet application
 '''
+'''
+Public section
+'''
+
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, forms, login, logout
+from django.db.models import Sum
 from django.http import HttpResponse
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import render
 
 from vb.core import manageBets, manageCentral, manageFunds
 from vb.forms import AddMoneyForm, BetForm, ConfigForm, LoginForm, MultiplierForm, RegistrationForm, ResultForm, TransferForm
-from vb.models import Bet, BettingUser, Configuration
-
-
-'''
-Public section
-'''
+from vb.models import Bet, BettingUser, Configuration, Fixture
 
 
 def index(request):
@@ -134,9 +136,18 @@ View functions for bet administrator
 
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
-        bets = Bet.objects.order_by('-match')
+        futureMatches = Fixture.objects.filter(match_date__gte=date.today())
+        betAggregate = []
+        for match in futureMatches:
+            if Bet.objects.filter(match=match, team=match.away_team).aggregate(Sum('amount'))['amount__sum'] > 0 or Bet.objects.filter(match=match, team=match.home_team).aggregate(Sum('amount'))['amount__sum'] > 0:
+                betAggregate.append({'match': match, 'home': Bet.objects.filter(match=match, team=match.home_team).aggregate(
+                    Sum('amount')), 'away': Bet.objects.filter(match=match, team=match.away_team).aggregate(Sum('amount'))})
+        futureBets = []
+        for match in futureMatches:
+            if len(Bet.objects.filter(match=match)) != 0:
+                futureBets.append(Bet.objects.filter(match=match))
         theme = Configuration.objects.get(pk=1).theme.theme_name
-        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'bets': bets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
+        return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'data': betAggregate, 'bets': futureBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:
         return HttpResponseRedirect('/login/')
 

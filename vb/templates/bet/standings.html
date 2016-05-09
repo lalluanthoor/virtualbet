@@ -1,6 +1,12 @@
 {% extends 'bet/base.html' %}
 
+{% load bootstrap3 %}
+{% load humanize %}
+
 {% block content %}
+
+{% bootstrap_messages %}
+
 <table class="table">
     <tr>
         <th>User</th>
@@ -10,7 +16,7 @@
 	    {% for user in users %}
 	        <tr>
 	            <td>{{ user.first_name|title }} {{ user.last_name|title }}</td>
-	            <td style="text-align:right">{{ user.account_balance }} </td>
+	            <td style="text-align:right">{{ user.account_balance|intcomma }} </td>
 	        </tr>
 	    {% endfor %}
 	{% else %}

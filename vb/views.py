@@ -145,7 +145,8 @@ def admin(request):
         futureBets = []
         for match in futureMatches:
             if len(Bet.objects.filter(match=match)) != 0:
-                futureBets.append(Bet.objects.filter(match=match))
+                futureBets.append(
+                    Bet.objects.filter(match=match).order_by('team'))
         theme = Configuration.objects.get(pk=1).theme.theme_name
         return HttpResponse(render(request, 'super/index.html', context={'active': {'home': 'active'}, 'data': betAggregate, 'bets': futureBets, 'title': 'Admin Home | Virtual Bet', 'theme': theme}))
     else:

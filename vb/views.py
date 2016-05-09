@@ -135,7 +135,7 @@ View functions for bet administrator
 
 def admin(request):
     if request.user.is_authenticated() and BettingUser.objects.get(username=request.user.username).bet_admin:
-        todaysMatches = Fixture.objects.filter(match_date__gte=date.today())
+        todaysMatches = Fixture.objects.filter(match_date=date.today())
         todaysBets = []
         for match in todaysMatches:
             todaysBets.append(Bet.objects.filter(match=match))
